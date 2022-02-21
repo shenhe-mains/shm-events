@@ -1,0 +1,21 @@
+{
+  "name": "shm-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "setup": "node src/setup.js",
+    "start": "node src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shenhe-mains/shm-events.git"
+  },
+  "author": "hyper-neutrino",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "fs": "^0.0.1-security",
+    "pg": "^8.7.3"
+  }
+}
