@@ -140,3 +140,175 @@ export async function economy(page) {
         )
     ).rows;
 }
+
+export async function create_giveaway(
+    title,
+    description,
+    duration,
+    cooldown,
+    max_tickets
+) {
+    return (
+        await db.query(
+            `INSERT INTO giveaways (title, description, duration, cooldown, max_tickets) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+            [title, description, duration, cooldown, max_tickets]
+        )
+    ).rows[0].id;
+}
+
+export async function giveaway_allow(id, snowflake) {
+    await db.query(
+        `INSERT INTO giveaway_access (
+            id, snowflake
+        ) VALUES ($1, $2) ON CONFLICT (
+            id, snowflake
+        ) DO UPDATE SET id = giveaway_access.id`,
+        [id, snowflake]
+    );
+}
+
+export async function giveaway_disallow(id, snowflake) {
+    await db.query(
+        `DELETE FROM giveaway_access WHERE id = $1 AND snowflake = $2`,
+        [id, snowflake]
+    );
+}
+
+export async function giveaway_weight(id, snowflake, weight) {
+    await db.query(
+        `INSERT INTO giveaway_weights (
+            id, snowflake, weight
+        ) VALUES ($1, $2, $3) ON CONFLICT (
+            id, snowflake
+        ) DO UPDATE SET weight = $3`,
+        [id, snowflake, weight]
+    );
+}
+
+export async function giveaway_titles() {
+    return (await db.query(`SELECT title FROM giveaways`)).rows.map(
+        (entry) => entry.title
+    );
+}
+
+export async function unposted_giveaway_titles() {
+    return (
+        await db.query(`SELECT title FROM giveaways WHERE NOT posted`)
+    ).rows.map((entry) => entry.title);
+}
+
+export async function active_giveaways() {
+    return (
+        await db.query(`SELECT * FROM giveaways WHERE end_date IS NOT NULL`)
+    ).rows;
+}
+
+export async function giveaway_by_id(id) {
+    return (await db.query(`SELECT * FROM giveaways WHERE id = $1`, [id]))
+        .rows[0];
+}
+
+export async function get_giveaway(title) {
+    return (await db.query(`SELECT * FROM giveaways WHERE title = $1`, [title]))
+        .rows[0];
+}
+
+export async function is_posted(id) {
+    return (await db.query(`SELECT posted FROM giveaways WHERE id = $1`, [id]))
+        .rows[0].posted;
+}
+
+export async function post_giveaway(id) {
+    await db.query(`DELETE FROM giveaway_entrants WHERE id = $1`, [id]);
+    const duration = (
+        await db.query(`SELECT duration FROM giveaways WHERE id = $1`, [id])
+    ).rows[0].duration;
+    const end_date = new Date();
+    end_date.setMinutes(end_date.getMinutes() + duration);
+    await db.query(
+        `UPDATE giveaways SET end_date = $1, posted = TRUE WHERE id = $2`,
+        [end_date, id]
+    );
+    return end_date;
+}
+
+export async function close_giveaway(id) {
+    await db.query(`UPDATE giveaways SET end_date = NULL WHERE id = $1`, [id]);
+}
+
+export async function set_giveaway_message(id, message) {
+    await db.query(
+        `UPDATE giveaways SET channel_id = $1, message_id = $2 WHERE id = $3`,
+        [message.channel.id, message.id, id]
+    );
+}
+
+export async function delete_giveaway(id) {
+    await db.query(`DELETE FROM giveaways WHERE id = $1`, [id]);
+}
+
+export async function giveaway_allows(id, snowflake) {
+    return (
+        (
+            await db.query(
+                `SELECT COUNT(*) FROM giveaway_access WHERE id = $1 AND snowflake = $2`,
+                [id, snowflake]
+            )
+        ).rows[0].count > 0
+    );
+}
+
+export async function get_giveaway_entrant(id, user_id) {
+    await db.query(
+        `INSERT INTO giveaway_entrants (
+            id, user_id
+        ) VALUES ($1, $2) ON CONFLICT (
+            id, user_id
+        ) DO UPDATE SET id = giveaway_entrants.id`,
+        [id, user_id]
+    );
+    return (
+        await db.query(
+            `SELECT last_entered, tickets FROM giveaway_entrants WHERE id = $1 AND user_id = $2`,
+            [id, user_id]
+        )
+    ).rows[0];
+}
+
+export async function enter_giveaway(id, user_id) {
+    await db.query(
+        `INSERT INTO giveaway_entrants (
+            id, user_id, last_entered, tickets
+        ) VALUES ($1, $2, $3, 1) ON CONFLICT (
+            id, user_id
+        ) DO UPDATE SET last_entered = $3, tickets = giveaway_entrants.tickets + 1`,
+        [id, user_id, new Date()]
+    );
+}
+
+export async function remove_entrant(id, user_id) {
+    await db.query(
+        `DELETE FROM giveaway_entrants WHERE id = $1 AND user_id = $2`,
+        [id, user_id]
+    );
+}
+
+export async function get_entrants(id) {
+    return (
+        await db.query(
+            `SELECT * FROM giveaway_entrants WHERE id = $1 AND tickets > 0`,
+            [id]
+        )
+    ).rows;
+}
+
+export async function get_giveaway_weight(id, snowflake) {
+    return (
+        (
+            await db.query(
+                `SELECT weight FROM giveaway_weights WHERE id = $1 AND snowflake = $2`,
+                [id, snowflake]
+            )
+        ).rows[0] || { weight: undefined }
+    ).weight;
+}

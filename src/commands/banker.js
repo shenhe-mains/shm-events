@@ -112,20 +112,26 @@ export async function execute(interaction) {
             break;
         case "xpreward":
             var xp_payout = 0;
+            var members = 0;
             for (const member of recipient instanceof Role
                 ? recipient.members.toJSON()
                 : [recipient]) {
                 const amount = Math.floor(
                     amount_per_xp * (await get_user_xp(member.id))
                 );
-                xp_payout += amount;
-                await add_money(member.id, amount);
+                if (amount > 0) {
+                    xp_payout += amount;
+                    ++members;
+                    await add_money(member.id, amount);
+                }
             }
             await interaction.reply({
                 embeds: [
                     {
                         title: "Reward complete!",
-                        description: `The bank paid ${recipient} a total of ${xp_payout} ${emojis.coin}`,
+                        description: `The bank paid ${recipient} a total of ${xp_payout} ${
+                            emojis.coin
+                        } to ${members} user${members == 1 ? "" : "s"}`,
                         color: "GREEN",
                     },
                 ],

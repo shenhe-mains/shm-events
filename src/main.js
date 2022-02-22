@@ -17,6 +17,8 @@ const autocompletes = new Map();
 var interaction_listener;
 
 client.on("ready", async () => {
+    await db.connect();
+
     console.log("Loading commands...");
 
     const commanddir = path.join(process.cwd(), "src", "commands");
@@ -40,20 +42,21 @@ client.on("ready", async () => {
         }
     }
 
-    await db.connect();
-
     console.log("SHM event bot is ready.");
 });
 
 client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isAutocomplete()) {
+        interaction.respond = (message) =>
+            interaction.reply({
+                content: message,
+                allowedMentions: { parse: [] },
+                ephemeral: true,
+            });
+    }
+
     if (interaction.isCommand()) {
         if (commands.has(interaction.commandName)) {
-            interaction.respond = (message) =>
-                interaction.reply({
-                    content: message,
-                    allowedMentions: { parse: [] },
-                    ephemeral: true,
-                });
             try {
                 const response = await commands.get(interaction.commandName)(
                     interaction
@@ -71,7 +74,20 @@ client.on("interactionCreate", async (interaction) => {
             await autocompletes.get(interaction.commandName)(interaction);
         }
     }
-    if (interaction_listener) await interaction_listener(interaction);
+
+    if (interaction_listener) {
+        try {
+            const response = await interaction_listener(interaction);
+            if (response) {
+                await interaction.respond(response);
+            }
+        } catch (error) {
+            try {
+                await interaction.respond("An unexpected error occurred!");
+            } catch {}
+            throw error;
+        }
+    }
 });
 
 client.login(config.discord_token);
