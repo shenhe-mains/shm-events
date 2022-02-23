@@ -91,7 +91,8 @@ export async function execute(interaction) {
     }
     const question = interaction.options.getString("question");
     const image = interaction.options.getString("image");
-    const answer = interaction.options.getString("answer").toLowerCase();
+    var answer = interaction.options.getString("answer");
+    if (answer) answer = answer.toLowerCase();
     const id = await get_question(question);
     switch (interaction.options.getSubcommand()) {
         case "create_question":
