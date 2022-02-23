@@ -411,10 +411,12 @@ export async function get_events() {
 }
 
 export async function create_question(question, image) {
-    await db.query(
-        `INSERT INTO trivia_questions (question, image) VALUES ($1, $2)`,
-        [question, image]
-    );
+    return (
+        await db.query(
+            `INSERT INTO trivia_questions (question, image) VALUES ($1, $2) RETURNING id`,
+            [question, image]
+        )
+    ).rows[0].id;
 }
 
 export async function delete_question(question) {

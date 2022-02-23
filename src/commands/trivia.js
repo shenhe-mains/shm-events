@@ -101,9 +101,9 @@ export async function execute(interaction) {
     switch (interaction.options.getSubcommand()) {
         case "create_question":
             if (id) return "That question already exists.";
-            await create_question(question, image);
+            const new_id = await create_question(question, image);
             if (answer) {
-                await add_answer((await get_question(question)).id, answer);
+                await add_answer(new_id, answer);
             }
             return "Created.";
         case "delete_question":
@@ -120,7 +120,7 @@ export async function execute(interaction) {
             return "Deleted.";
         case "list_answers":
             if (!id) return "That question does not exist.";
-            return (await list_answers(id)).join(", ");
+            return (await list_answers(id)).join(", ") || "(no answers)";
     }
 }
 
