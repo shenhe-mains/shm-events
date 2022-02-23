@@ -89,7 +89,7 @@ export async function execute(interaction) {
                 : [recipient]) {
                 await add_money(member.id, amount);
             }
-            await interaction.editReply({
+            await interaction.followUp({
                 embeds: [
                     {
                         title: "Deployment complete!",
@@ -101,7 +101,7 @@ export async function execute(interaction) {
             break;
         case "fine":
             await add_money(target.id, -amount);
-            await interaction.editReply({
+            await interaction.followUp({
                 embeds: [
                     {
                         title: "User fined!",
@@ -126,7 +126,7 @@ export async function execute(interaction) {
                     await add_money(member.id, amount);
                 }
             }
-            await interaction.editReply({
+            await interaction.followUp({
                 embeds: [
                     {
                         title: "Reward complete!",
