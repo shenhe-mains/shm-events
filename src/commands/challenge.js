@@ -112,7 +112,6 @@ export async function execute(interaction) {
                     interaction.member,
                     opponent
                 );
-                console.log(fight_winner);
                 await interaction.editReply({
                     embeds: [
                         {
@@ -128,7 +127,8 @@ export async function execute(interaction) {
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
         if (
-            Math.min(await get_money(giver), await get_money(receiver)) < amount
+            Math.min(await get_money(giver.id), await get_money(receiver.id)) <
+            amount
         ) {
             await interaction.channel.send({
                 embeds: [
