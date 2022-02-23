@@ -198,7 +198,7 @@ function do_fight(user_1, user_2) {
             break;
         } else {
             actions.push(
-                `${message} for ${damage} damage; ${users[1].user} is on ${users[1].hp} HP.`
+                `${message} for **${damage} damage**. (${users[1].hp} HP left)`
             );
             [users[0], users[1]] = [users[1], users[0]];
         }
