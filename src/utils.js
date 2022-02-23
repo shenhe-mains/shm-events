@@ -8,12 +8,12 @@ export class Response extends Error {
     }
 }
 
-export async function ac_substring(interaction, list) {
+export async function ac_substring(interaction, list, map) {
     const query = interaction.options.getFocused();
     await interaction.respond(
         list
             .filter((item) => item.match(query))
-            .map((item) => ({ name: item, value: item }))
+            .map((item) => ({ name: item, value: map ? map.get(item) : item }))
     );
 }
 

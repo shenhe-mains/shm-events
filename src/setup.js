@@ -72,5 +72,15 @@ import { db } from "./db_client.js";
         )`
     );
 
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS shop_purchases (
+            name VARCHAR(128) NOT NULL,
+            user_id VARCHAR(32) NOT NULL,
+            owned INTEGER NOT NULL DEFAULT 0,
+            last_purchase TIMESTAMP NOT NULL DEFAULT '1970-1-1',
+            PRIMARY KEY (name, user_id)
+        )`
+    );
+
     process.exit();
 })();

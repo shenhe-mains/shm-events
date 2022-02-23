@@ -312,3 +312,36 @@ export async function get_giveaway_weight(id, snowflake) {
         ).rows[0] || { weight: undefined }
     ).weight;
 }
+
+export async function shop_owned(name, user_id) {
+    return (
+        (
+            await db.query(
+                `SELECT owned FROM shop_purchases WHERE name = $1 AND user_id = $2`,
+                [name, user_id]
+            )
+        ).rows[0] || { owned: 0 }
+    ).owned;
+}
+
+export async function last_purchase(name, user_id) {
+    return (
+        (
+            await db.query(
+                `SELECT last_purchase FROM shop_purchases WHERE name = $1 AND user_id = $2`,
+                [name, user_id]
+            )
+        ).rows[0] || { last_purchase: undefined }
+    ).last_purchase;
+}
+
+export async function buy(name, user_id, amount) {
+    await db.query(
+        `INSERT INTO shop_purchases (
+            name, user_id, owned, last_purchase
+        ) VALUES ($1, $2, $3, $4) ON CONFLICT (
+            name, user_id
+        ) DO UPDATE SET owned = shop_purchases.owned + $3, last_purchase = $4`,
+        [name, user_id, amount, new Date()]
+    );
+}
