@@ -1,7 +1,7 @@
 import { Role } from "discord.js";
 import { config } from "../config.js";
-import { add_money, get_user_xp } from "../db.js";
-import { emojis } from "../utils.js";
+import { add_money, get_user_xp, reset_economy } from "../db.js";
+import { confirm, emojis } from "../utils.js";
 
 export const command = {
     name: "banker",
@@ -70,6 +70,11 @@ export const command = {
                 },
             ],
         },
+        {
+            name: "reset",
+            description: "Reset the entire economy",
+            type: "SUB_COMMAND",
+        },
     ],
 };
 
@@ -135,6 +140,27 @@ export async function execute(interaction) {
                             emojis.coin
                         } to ${members} user${members == 1 ? "" : "s"}`,
                         color: "GREEN",
+                    },
+                ],
+            });
+            break;
+        case "reset":
+            if (
+                !(await confirm(interaction, {
+                    title: "Reset Economy?",
+                    description: "This action cannot be undone!",
+                    color: "RED",
+                }))
+            ) {
+                break;
+            }
+            await reset_economy();
+            await interaction.followUp({
+                embeds: [
+                    {
+                        title: "Economy Reset!",
+                        description: `The economy was fully reset.`,
+                        color: "RED",
                     },
                 ],
             });

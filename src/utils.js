@@ -48,3 +48,40 @@ export function english_join(list) {
         );
     }
 }
+
+export async function confirm(interaction, embed, confirm, cancel, timeout) {
+    const message = await interaction.reply({
+        embeds: [embed],
+        components: [
+            {
+                type: "ACTION_ROW",
+                components: [
+                    {
+                        type: "BUTTON",
+                        style: "SUCCESS",
+                        customId: "confirm",
+                        label: confirm || "CONFIRM",
+                    },
+                    {
+                        type: "BUTTON",
+                        style: "DANGER",
+                        customId: "cancel",
+                        label: cancel || "CANCEL",
+                    },
+                ],
+            },
+        ],
+        ephemeral: true,
+    });
+    try {
+        const response = await message.awaitMessageComponent({
+            time: timeout || 60000,
+        });
+        if (response.customId == "confirm") return;
+    } catch {}
+    await interaction.editReply({
+        content: "Canceled!",
+        embeds: [],
+        components: [],
+    });
+}

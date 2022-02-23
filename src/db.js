@@ -141,6 +141,10 @@ export async function economy(page) {
     ).rows;
 }
 
+export async function reset_economy() {
+    await db.query(`DELETE FROM economy`);
+}
+
 export async function create_giveaway(
     title,
     description,
