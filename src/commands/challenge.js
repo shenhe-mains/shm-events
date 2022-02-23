@@ -50,9 +50,7 @@ export async function execute(interaction) {
         return "Your opponent does not have enough money for that.";
     }
     const sub = interaction.options.getSubcommand();
-    var win;
-    var message;
-    var response;
+    var win, message, response;
     switch (sub) {
         case "fight":
             message = await interaction.reply({
@@ -92,15 +90,12 @@ export async function execute(interaction) {
             filter: (interaction) => interaction.user.id == opponent.id,
             time: 60000,
         });
-        if (click.customId == "cancel") {
-            cancel = true;
-        } else {
-            response = click.customId;
-        }
+        response = click.customId;
     } catch {
-        cancel = true;
+        response = "cancel";
     }
-    if (cancel) {
+    console.log(response);
+    if (response == "cancel") {
         await interaction.editReply({
             embeds: [
                 {
