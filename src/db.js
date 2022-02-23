@@ -426,14 +426,9 @@ export async function get_question(question) {
     if (question.endsWith("...")) {
         question = question.substring(0, question.length - 3);
     }
-    return (
-        (
-            await db.query(
-                `SELECT id FROM trivia_questions WHERE CHARINDEX($1, question) > 0`,
-                [question]
-            )
-        ).rows[0] || { id: undefined }
-    ).id;
+    for (const q of await list_questions()) {
+        if (question.question.startsWith(question)) return q;
+    }
 }
 
 export async function add_answer(id, answer) {
