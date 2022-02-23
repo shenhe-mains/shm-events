@@ -143,6 +143,7 @@ export async function economy(page) {
 
 export async function reset_economy() {
     await db.query(`DELETE FROM economy`);
+    await db.query(`DELETE FROM salaries`);
 }
 
 export async function create_giveaway(
