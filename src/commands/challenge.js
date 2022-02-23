@@ -54,6 +54,7 @@ export async function execute(interaction) {
     switch (sub) {
         case "fight":
             message = await interaction.reply({
+                content: opponent.toString(),
                 embeds: [
                     {
                         title: "Fight Challenge",
