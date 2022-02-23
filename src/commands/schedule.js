@@ -95,7 +95,7 @@ export async function execute(interaction) {
         }
         await schedule(type, channel);
         return "Created!";
-    } else if (sub == "destroy") {
+    } else if (sub == "delete") {
         await delete_event(channel.id, type);
         const key = channel.id + "/" + type;
         if (scheduled.has(key)) {
