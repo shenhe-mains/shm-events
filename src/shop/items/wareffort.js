@@ -2,9 +2,7 @@ import { config } from "../../config.js";
 import { list_xp_roles } from "../../db.js";
 import { add_xp } from "../../events/messageCreate.js";
 
-export const name = "war effort";
-export const description =
-    "Enlist help in the Ganyu vs. Ayaka event! Each unit is worth an hour of XP (only for your team).";
+export const name = "war effort (1h XP for the Ganyu vs. Ayaka event) - $1000";
 export const cost = 1000;
 export const cooldown = 43200;
 export const max = 0;

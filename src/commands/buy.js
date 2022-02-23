@@ -5,14 +5,12 @@ import { ac_substring, display_time, emojis } from "../utils.js";
 
 const names = [];
 const items = new Map();
-const descriptions = new Map();
 
 const shopdir = path.join(process.cwd(), "src", "shop", "items");
 for (const file of fs.readdirSync(shopdir)) {
     import(path.join(shopdir, file)).then((item) => {
         names.push(item.name);
-        items.set(item.description, item);
-        descriptions.set(item.name, item.description);
+        items.set(item.name, item);
     });
 }
 
@@ -75,5 +73,5 @@ export async function execute(interaction) {
 }
 
 export async function autocomplete(interaction) {
-    await ac_substring(interaction, names, descriptions);
+    await ac_substring(interaction, names);
 }
