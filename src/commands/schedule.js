@@ -142,7 +142,7 @@ const types = {
             questions[Math.floor(Math.random() * questions.length)];
         const answers = await list_answers(id);
         await delete_question(question);
-        const xp = Math.floor(Math.random() * 40 + 120);
+        const xp = Math.floor(Math.random() * 20 + 80);
         const cash = Math.floor(Math.random() * 200 + 400);
         await channel.send({
             embeds: [
