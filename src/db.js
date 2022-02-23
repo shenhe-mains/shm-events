@@ -409,10 +409,11 @@ export async function get_events() {
     return (await db.query(`SELECT * FROM random_events`)).rows;
 }
 
-export async function create_question(question) {
-    await db.query(`INSERT INTO trivia_questions (question) VALUES ($1)`, [
-        question,
-    ]);
+export async function create_question(question, image) {
+    await db.query(
+        `INSERT INTO trivia_questions (question, image) VALUES ($1, $2)`,
+        [question, image]
+    );
 }
 
 export async function delete_question(question) {

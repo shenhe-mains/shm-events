@@ -117,7 +117,7 @@ export async function execute(interaction) {
 const types = {
     trivia: async (channel) => {
         const questions = await list_questions();
-        const { id, question } =
+        const { id, question, image } =
             questions[Math.floor(Math.random() * questions.length)];
         const answers = await list_answers(id);
         const xp = Math.floor(Math.random() * 10 + 45);
@@ -128,6 +128,7 @@ const types = {
                     title: "Trivia Question!",
                     description: `${question}\n\nYou will receive ${xp} XP for your team + ${cash} ${emojis.coin} (10 minutes to answer).`,
                     color: "ff0088",
+                    image: image || null,
                 },
             ],
         });

@@ -33,6 +33,12 @@ export const command = {
                     type: "STRING",
                     required: true,
                 },
+
+                {
+                    name: "image",
+                    description: "image URL (optional)",
+                    type: "STRING",
+                },
             ],
         },
         {
@@ -83,12 +89,13 @@ export async function execute(interaction) {
         return "Only bot owners can use trivia commands.";
     }
     const question = interaction.options.getString("question");
+    const image = interaction.options.getString("image");
     const answer = interaction.options.getString("answer").toLowerCase();
     const id = await get_question(question);
     switch (interaction.options.getSubcommand()) {
         case "create_question":
             if (id) return "That question already exists.";
-            await create_question(question);
+            await create_question(question, image);
             return "Created.";
         case "delete_question":
             if (!id) return "That question does not exist.";
