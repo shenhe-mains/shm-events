@@ -147,9 +147,7 @@ const types = {
                     },
                 ],
             });
-        } catch (error) {
-            console.error(error);
-        }
+        } catch {}
     },
 };
 
@@ -157,6 +155,7 @@ const scheduled = new Map();
 
 async function schedule(type, channel) {
     const event = await get_event(channel.id, type);
+    console.log(event);
     if (!event) return;
     const seconds =
         Math.random() * (event.max_period - event.min_period) +
