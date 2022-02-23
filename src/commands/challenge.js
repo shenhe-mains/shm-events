@@ -49,10 +49,11 @@ export async function execute(interaction) {
     if ((await get_money(opponent.id)) < amount) {
         return "Your opponent does not have enough money for that.";
     }
+    const sub = interaction.options.getSubcommand();
     var win;
-    var cancel = false;
     var message;
-    switch (interaction.options.getSubcommand()) {
+    var response;
+    switch (sub) {
         case "fight":
             message = await interaction.reply({
                 embeds: [
@@ -85,34 +86,19 @@ export async function execute(interaction) {
                 ],
                 fetchReply: true,
             });
-            try {
-                const response = await message.awaitMessageComponent({
-                    filter: (interaction) => interaction.user.id == opponent.id,
-                    time: 60000,
-                });
-                if (response.customId == "confirm") {
-                    const [fight_winner, fight_text] = do_fight(
-                        interaction.member,
-                        opponent
-                    );
-                    await interaction.editReply({
-                        embeds: [
-                            {
-                                title: `${fight_winner.user.tag} wins!`,
-                                description: fight_text,
-                                color: config.color,
-                            },
-                        ],
-                        components: [],
-                    });
-                    win = fight_winner.id == interaction.user.id;
-                } else {
-                    cancel = true;
-                }
-            } catch {
-                cancel = true;
-            }
-            break;
+    }
+    try {
+        const click = await message.awaitMessageComponent({
+            filter: (interaction) => interaction.user.id == opponent.id,
+            time: 60000,
+        });
+        if (click.customId == "cancel") {
+            cancel = true;
+        } else {
+            response = click.customId;
+        }
+    } catch {
+        cancel = true;
     }
     if (cancel) {
         await interaction.editReply({
@@ -126,6 +112,24 @@ export async function execute(interaction) {
             components: [],
         });
     } else {
+        switch (sub) {
+            case "fight":
+                const [fight_winner, fight_text] = do_fight(
+                    interaction.member,
+                    opponent
+                );
+                await interaction.editReply({
+                    embeds: [
+                        {
+                            title: `${fight_winner.user.tag} wins!`,
+                            description: fight_text,
+                            color: config.color,
+                        },
+                    ],
+                    components: [],
+                });
+                win = fight_winner.id == interaction.user.id;
+        }
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
         await add_money(giver.id, -amount);
