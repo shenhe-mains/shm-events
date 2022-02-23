@@ -77,19 +77,19 @@ export async function execute(interaction) {
     if (config.owners.indexOf(interaction.user.id) == -1) {
         return "Only bot owners can use banker commands.";
     }
-    await interaction.deferReply({ ephemeral: true });
     const recipient = interaction.options.getMentionable("recipient");
     const target = interaction.options.getMember("target");
     const amount = interaction.options.getInteger("amount");
     const amount_per_xp = interaction.options.getNumber("amount_per_xp");
     switch (interaction.options.getSubcommand()) {
         case "deploy":
+            await interaction.deferReply();
             for (const member of recipient instanceof Role
                 ? recipient.members.toJSON()
                 : [recipient]) {
                 await add_money(member.id, amount);
             }
-            await interaction.followUp({
+            await interaction.editReply({
                 embeds: [
                     {
                         title: "Deployment complete!",
@@ -101,7 +101,7 @@ export async function execute(interaction) {
             break;
         case "fine":
             await add_money(target.id, -amount);
-            await interaction.followUp({
+            await interaction.editReply({
                 embeds: [
                     {
                         title: "User fined!",
@@ -112,6 +112,7 @@ export async function execute(interaction) {
             });
             break;
         case "xpreward":
+            await interaction.deferReply();
             var xp_payout = 0;
             var members = 0;
             for (const member of recipient instanceof Role
@@ -126,7 +127,7 @@ export async function execute(interaction) {
                     await add_money(member.id, amount);
                 }
             }
-            await interaction.followUp({
+            await interaction.editReply({
                 embeds: [
                     {
                         title: "Reward complete!",
