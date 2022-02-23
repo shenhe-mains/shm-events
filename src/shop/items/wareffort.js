@@ -31,9 +31,11 @@ export async function buy(interaction, amount) {
         embeds: [
             {
                 title: "War Efforts purchased!",
-                description: `${interaction.user} just purchased ${
-                    amount * 10
-                } hour${amount == 1 ? "" : "s"} worth of XP for their team!`,
+                description: `${
+                    interaction.user
+                } just purchased ${amount} hour${
+                    amount == 1 ? "" : "s"
+                } worth of XP for their team!`,
                 color: config.color,
             },
         ],
