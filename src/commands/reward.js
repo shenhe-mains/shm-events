@@ -41,8 +41,8 @@ export async function execute(interaction) {
     const member = interaction.options.getMember("user", true);
     const xp = interaction.options.getInteger("xp", true);
     const money = interaction.options.getInteger("money", true);
-    await add_xp(member, xp, true);
-    await add_money(member, money);
+    await add_xp(member.id, xp, true);
+    await add_money(member.id, money);
     await interaction.reply({
         embeds: [
             {
