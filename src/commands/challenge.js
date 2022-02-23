@@ -273,10 +273,36 @@ const fight_actions = [
     ],
     [(x, y) => `${x} smote ${y}`, 20, 60],
     [(x, y) => `${x} rolled the dice of ${y}'s fate`, 0, 100],
+    [(x, y) => `${x} threw ${y} off of Albedo's elevator`, 30, 50],
+    [(x, y) => `${x} detonated Aloy's power cell: Prophecies of Dawn`, 50, 75],
+    [(x, y) => `${x} blew up Baron Bunny in ${y}'s face`, 40, 60],
+    [(x, y) => `${x} threw a cow (it was Ushi) at ${y}`, 30, 50],
+    [
+        (x, y) =>
+            `${x} [Barbara-slapped](https://www.youtube.com/watch?v=72gnO-bYmLY) ${y}`,
+        15,
+        30,
+    ],
+    [
+        (x, y) => `${x} called the tides (Beidou's Tidecaller) against ${y}`,
+        40,
+        60,
+    ],
+    [(x, y) => `${x} gave ${y} Bennett's luck`, 50, 100],
+    [(x, y) => `${x} exorcised ${y} with their yang energy`, 60, 80],
+    [(x, y) => `${x} summoned a phoenix (Diluc's Dawn) to attack ${y}`, 60, 80],
+    [(x, y) => `${x}'s Signature Mix was so bad that it poisoned ${y}`, 50, 75],
+    [(x, y) => `${x} struck down ${y} with their Lightfall Sword`, 60, 90],
 ];
 
 const rare_actions = [
-    [(x, y) => `${x} used THE MIGHT OF ZEUS on ${y}`, 100, 100],
+    [(x, y) => `${x} used THE MIGHT OF ZEUS on ${y}`, 1000, 1000],
+    [
+        (x, y) =>
+            `I, Fischl von Luftschloss Narfidort, Prinzessin der Verurteilung, descend upon this land by the call of fate of ${x} and bring down Thundering Retribution to strike down ${y}!`,
+        1000,
+        1000,
+    ],
     [
         (x, y) =>
             `${x} used [EMOTIONAL DAMAGE](https://www.youtube.com/watch?v=i1ojUmdF42U) on ${y}`,
