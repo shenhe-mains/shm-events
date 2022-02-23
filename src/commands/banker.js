@@ -77,7 +77,7 @@ export async function execute(interaction) {
     if (config.owners.indexOf(interaction.user.id) == -1) {
         return "Only bot owners can use banker commands.";
     }
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     const recipient = interaction.options.getMentionable("recipient");
     const target = interaction.options.getMember("target");
     const amount = interaction.options.getInteger("amount");
