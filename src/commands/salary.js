@@ -24,9 +24,9 @@ export async function execute(interaction) {
     var amount = Math.random() * (max_salary - min_salary) + min_salary;
     const broke = (await get_money(interaction.user.id)) < threshold;
     if (broke) {
-        amount = Math.floor(amount * 1.5);
+        amount *= 1.5;
     }
-    await add_money(interaction.user.id, amount);
+    await add_money(interaction.user.id, Math.floor(amount));
     await interaction.reply({
         embeds: [
             {
