@@ -72,6 +72,7 @@ export async function confirm(interaction, embed, confirm, cancel, timeout) {
             },
         ],
         ephemeral: true,
+        fetchReply: true,
     });
     try {
         const response = await message.awaitMessageComponent({
