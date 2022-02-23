@@ -186,6 +186,7 @@ export async function execute(interaction) {
                     components: [],
                 });
                 win = fight_winner.id == interaction.user.id;
+                break;
             case "rps":
                 const rps_action = interaction.options.getString("action");
                 if (rps_action == response) {
@@ -220,6 +221,7 @@ export async function execute(interaction) {
                         components: [],
                     });
                 }
+                break;
         }
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
