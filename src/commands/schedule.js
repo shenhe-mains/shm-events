@@ -85,12 +85,11 @@ export async function execute(interaction) {
     const channel = interaction.options.getChannel("channel");
     if (!types[type]) return "That event type does not exist.";
     if (sub == "create") {
-        var min, max;
         await add_event(
             channel.id,
             type,
-            (min = interaction.options.getInteger("min")),
-            (max = interaction.options.getInteger("max"))
+            interaction.options.getInteger("min"),
+            interaction.options.getInteger("max")
         );
         await post_event(channel.id, type);
         if (!interaction.options.getBoolean("skip")) {
@@ -130,6 +129,7 @@ const types = {
         try {
             const messages = await channel.awaitMessages({
                 filter: (message) =>
+                    message.channel.id == channel.id &&
                     answers.indexOf(message.content.toLowerCase()) != -1,
                 max: 1,
                 time: 600000,
