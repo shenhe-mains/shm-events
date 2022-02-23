@@ -1,11 +1,23 @@
-import { add_event, delete_event, post_event } from "../db.js";
+import { client } from "../client.js";
+import {
+    add_event,
+    delete_event,
+    get_event,
+    get_events,
+    post_event,
+} from "../db.js";
 
 export const type = {
     name: "type",
     description: "the type of event",
     type: "STRING",
     required: true,
-    choices: ["trivia"],
+    choices: [
+        {
+            name: "trivia",
+            value: "trivia",
+        },
+    ],
 };
 
 export const channel = {
@@ -36,14 +48,14 @@ export const command = {
                 channel,
                 {
                     name: "min",
-                    description: "minimum delay (minutes)",
+                    description: "minimum delay (seconds)",
                     type: "INTEGER",
                     minValue: 1,
                     required: true,
                 },
                 {
                     name: "max",
-                    description: "maximum delay (minutes)",
+                    description: "maximum delay (seconds)",
                     type: "INTEGER",
                     minValue: 1,
                     required: true,
@@ -88,7 +100,40 @@ export async function execute(interaction) {
 }
 
 const types = {
-    trivia: 0,
+    trivia: async (channel) => {
+        channel.send("test");
+    },
 };
 
 const scheduled = new Map();
+
+async function schedule(type, channel) {
+    const event = await get_event(channel.id, type);
+    const seconds =
+        Math.random() * (event.max_period - event.min_period) +
+        event.min_period;
+    const key = channel.id + "/" + type;
+    if (scheduled.has(key)) {
+        try {
+            clearTimeout(scheduled.get(key));
+        } catch {}
+    }
+    scheduled.set(
+        key,
+        setTimeout(() => {
+            types[type](channel);
+            schedule(type, channel);
+        }, seconds * 1000)
+    );
+}
+
+get_events().then((entries) =>
+    entries.forEach(async (entry) => {
+        try {
+            await schedule(
+                entry.type,
+                await client.channels.fetch(entry.channel_id)
+            );
+        } catch {}
+    })
+);

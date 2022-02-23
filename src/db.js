@@ -396,7 +396,7 @@ export async function delete_event(channel_id, type) {
     );
 }
 
-export async function get_event(channel_id) {
+export async function get_event(channel_id, type) {
     return (
         await db.query(
             `SELECT * FROM random_events WHERE channel_id = $1 AND type = $2`,
