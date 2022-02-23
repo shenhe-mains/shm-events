@@ -430,7 +430,7 @@ export async function get_question(question) {
         (
             await db.query(
                 `SELECT id FROM trivia_questions WHERE question LIKE $1`,
-                [question + "%"]
+                [question.replaceAll("%", "\\%") + "%"]
             )
         ).rows[0] || { id: undefined }
     ).id;
