@@ -89,5 +89,16 @@ import { db } from "./db_client.js";
         )`
     );
 
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS random_events (
+            channel_id VARCHAR(32) NOT NULL,
+            type VARCHAR(16) NOT NULL,
+            last TIMESTAMP NOT NULL DEFAULT '1970-1-1',
+            min_period INTEGER NOT NULL,
+            max_period INTEGER NOT NULL,
+            PRIMARY KEY (channel_id, type)
+        )`
+    );
+
     process.exit();
 })();

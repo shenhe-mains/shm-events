@@ -370,3 +370,41 @@ export async function give_salary(user_id) {
         [user_id, new Date()]
     );
 }
+
+export async function add_event(channel_id, type, min_period, max_period) {
+    await db.query(
+        `INSERT INTO random_events (
+            channel_id, type, min_period, max_period
+        ) VALUES ($1, $2, $3, $4) ON CONFLICT (
+            channel_id, type
+        ) DO UPDATE SET min_period = $2, max_period = $3`,
+        [channel_id, type, min_period, max_period]
+    );
+}
+
+export async function post_event(channel_id, type) {
+    await db.query(
+        `UPDATE random_events SET last = $1 WHERE channel_id = $2 AND type = $3`,
+        [new Date(), channel_id, type]
+    );
+}
+
+export async function delete_event(channel_id, type) {
+    await db.query(
+        `DELETE FROM random_events WHERE channel_id = $1 AND type = $2`,
+        [channel_id, type]
+    );
+}
+
+export async function get_event(channel_id) {
+    return (
+        await db.query(
+            `SELECT * FROM random_events WHERE channel_id = $1 AND type = $2`,
+            [channel_id, type]
+        )
+    ).rows[0];
+}
+
+export async function get_events() {
+    return (await db.query(`SELECT * FROM random_events`)).rows;
+}

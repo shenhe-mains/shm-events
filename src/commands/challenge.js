@@ -196,9 +196,8 @@ function do_fight(user_1, user_2) {
     ).map((user) => ({ user, hp: 100 }));
     const actions = [];
     while (true) {
-        const actions = Math.random() < 0.1 ? rare_actions : fight_actions;
-        const [msgfn, min, max] =
-            actions[Math.floor(Math.random() * actions.length)];
+        const ls = Math.random() < 0.1 ? rare_actions : fight_actions;
+        const [msgfn, min, max] = ls[Math.floor(Math.random() * ls.length)];
         const damage = Math.floor(Math.random() * (max - min)) + min;
         const message = msgfn(users[0].user, users[1].user);
         users[1].hp -= damage;
