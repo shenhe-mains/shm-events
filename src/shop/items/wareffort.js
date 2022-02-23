@@ -6,7 +6,7 @@ export const name = "war effort";
 export const description =
     "Enlist help in the Ganyu vs. Ayaka event! Each unit is worth an hour of XP (only for your team).";
 export const cost = 1000;
-export const cooldown = 86400;
+export const cooldown = 43200;
 export const max = 0;
 export const max_bulk = 1;
 
@@ -31,11 +31,9 @@ export async function buy(interaction, amount) {
         embeds: [
             {
                 title: "War Efforts purchased!",
-                description: `${
-                    interaction.user
-                } just purchased ${amount} hour${
-                    amount == 1 ? "" : "s"
-                } worth of XP for their team!`,
+                description: `${interaction.user} just purchased ${
+                    amount * 10
+                } hour${amount == 1 ? "" : "s"} worth of XP for their team!`,
                 color: config.color,
             },
         ],
