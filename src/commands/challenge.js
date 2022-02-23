@@ -199,6 +199,7 @@ export async function execute(interaction) {
                         ],
                         components: [],
                     });
+                    return;
                 } else {
                     win =
                         (rps_action == "rock" && response == "scissors") ||
