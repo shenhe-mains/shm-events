@@ -7,43 +7,41 @@ export const command = {
     description: "Challenge a player to a minigame.",
     type: "CHAT_INPUT",
     options: [
+        ["fight", "Do a randomized 1v1 against another player."],
         [
-            ["fight", "Do a randomized 1v1 against another player."],
+            "rps",
+            "Play Rock-Paper-Scissors against another player.",
             [
-                "rps",
-                "Play Rock-Paper-Scissors against another player.",
-                [
-                    {
-                        name: "action",
-                        description: "the action to take",
-                        type: "STRING",
-                        required: true,
-                        choices: ["rock", "paper", "scissors"],
-                    },
-                ],
-            ],
-        ].map(([name, description, options]) => ({
-            name,
-            description,
-            type: "SUB_COMMAND",
-            options: [
                 {
-                    name: "opponent",
-                    description: "the user to challenge",
-                    type: "USER",
+                    name: "action",
+                    description: "the action to take",
+                    type: "STRING",
                     required: true,
+                    choices: ["rock", "paper", "scissors"],
                 },
-                {
-                    name: "amount",
-                    description: "the amount to wager",
-                    type: "INTEGER",
-                    required: true,
-                    minValue: 0,
-                },
-                ...(options || []),
             ],
-        })),
-    ],
+        ],
+    ].map(([name, description, options]) => ({
+        name,
+        description,
+        type: "SUB_COMMAND",
+        options: [
+            {
+                name: "opponent",
+                description: "the user to challenge",
+                type: "USER",
+                required: true,
+            },
+            {
+                name: "amount",
+                description: "the amount to wager",
+                type: "INTEGER",
+                required: true,
+                minValue: 0,
+            },
+            ...(options || []),
+        ],
+    })),
 };
 
 export async function execute(interaction) {
