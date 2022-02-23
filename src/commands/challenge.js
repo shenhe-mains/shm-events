@@ -151,16 +151,18 @@ const fight_actions = [
     [
         (x, y) =>
             `${x} used [EMOTIONAL DAMAGE](https://www.youtube.com/watch?v=i1ojUmdF42U) on ${y}`,
-        [20, 40],
+        20,
+        40,
     ],
     [
         (x, y) =>
             `${x} couldn't bring themselves to hurt ${y}, and healed them`,
-        [-20, -10],
+        -20,
+        -10,
     ],
-    [(x, y) => `${x} summoned Shenhe's spirit to their aid`, [40, 80]],
-    [(x, y) => `${x} smited ${y}`, [20, 60]],
-    [(x, y) => `${x} rolled the dice of ${y}'s fate`, [0, 100]],
+    [(x, y) => `${x} summoned Shenhe's spirit to their aid`, 40, 80],
+    [(x, y) => `${x} smited ${y}`, 20, 60],
+    [(x, y) => `${x} rolled the dice of ${y}'s fate`, 0, 100],
 ];
 
 function do_fight(user_1, user_2) {
