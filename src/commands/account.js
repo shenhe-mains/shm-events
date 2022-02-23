@@ -17,7 +17,7 @@ export const command = {
 };
 
 export async function execute(interaction) {
-    const member = await interaction.options.getMember("user");
+    const member = interaction.options.getMember("user") || interaction.member;
     await interaction.reply({
         embeds: [
             {
