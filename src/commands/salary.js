@@ -26,7 +26,8 @@ export async function execute(interaction) {
     if (broke) {
         amount *= 1.5;
     }
-    await add_money(interaction.user.id, Math.floor(amount));
+    amount = Math.floor(amount);
+    await add_money(interaction.user.id, amount);
     await interaction.reply({
         embeds: [
             {
