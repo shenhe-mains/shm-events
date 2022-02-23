@@ -349,3 +349,24 @@ export async function buy(name, user_id, amount) {
         [name, user_id, amount, new Date()]
     );
 }
+
+export async function last_salary(user_id) {
+    return (
+        (
+            await db.query(`SELECT last FROM salaries WHERE user_id = $1`, [
+                user_id,
+            ])
+        ).rows[0] || { last: undefined }
+    ).last;
+}
+
+export async function give_salary(user_id) {
+    await db.query(
+        `INSERT INTO salaries (
+            user_id, last
+        ) VALUES ($1, $2) ON CONFLICT (
+            user_id
+        ) DO UPDATE SET last = $2`,
+        [user_id, new Date()]
+    );
+}

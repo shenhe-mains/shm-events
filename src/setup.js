@@ -82,5 +82,12 @@ import { db } from "./db_client.js";
         )`
     );
 
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS salaries (
+            user_id VARCHAR(32) PRIMARY KEY NOT NULL,
+            last TIMESTAMP NOT NULL DEFAULT '1970-1-1'
+        )`
+    );
+
     process.exit();
 })();
