@@ -92,11 +92,13 @@ export async function execute(interaction) {
             interaction.options.getInteger("max")
         );
         await post_event(channel.id, type);
+        console.log("A");
         if (!interaction.options.getBoolean("skip")) {
             await types[type](channel);
         }
+        console.log("B");
         await schedule(type, channel);
-        console.log("DONE");
+        console.log("C");
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
