@@ -121,8 +121,8 @@ const types = {
         const { id, question, image } =
             questions[Math.floor(Math.random() * questions.length)];
         const answers = await list_answers(id);
-        const xp = Math.floor(Math.random() * 10 + 45);
-        const cash = Math.floor(Math.random() * 100 + 300);
+        const xp = Math.floor(Math.random() * 40 + 120);
+        const cash = Math.floor(Math.random() * 200 + 400);
         await channel.send({
             embeds: [
                 {
