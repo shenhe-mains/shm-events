@@ -12,7 +12,7 @@ export async function ac_substring(interaction, list, map) {
     const query = interaction.options.getFocused().toLowerCase();
     await interaction.respond(
         list
-            .filter((item) => item.toLowerCase().match(query))
+            .filter((item) => item.toLowerCase().indexOf(query) > -1)
             .map((item) =>
                 item.length > 100 ? item.substring(0, 97) + "..." : item
             )

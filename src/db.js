@@ -426,9 +426,14 @@ export async function get_question(question) {
     if (question.endsWith("...")) {
         question = question.substring(0, question.length - 3);
     }
-    for (const q of await list_questions()) {
-        if (question.question.startsWith(question)) return q;
-    }
+    return (
+        (
+            await db.query(
+                `SELECT id FROM trivia_questions WHERE question LIKE $1`,
+                [question.replaceAll("%", "\\%") + "%"]
+            )
+        ).rows[0] || { id: undefined }
+    ).id;
 }
 
 export async function add_answer(id, answer) {
