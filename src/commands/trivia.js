@@ -34,10 +34,14 @@ export const command = {
                     type: "STRING",
                     required: true,
                 },
-
                 {
                     name: "image",
                     description: "image URL (optional)",
+                    type: "STRING",
+                },
+                {
+                    name: "answer",
+                    description: "the answer (more can be added/removed later)",
                     type: "STRING",
                 },
             ],
@@ -98,6 +102,9 @@ export async function execute(interaction) {
         case "create_question":
             if (id) return "That question already exists.";
             await create_question(question, image);
+            if (answer) {
+                await add_answer((await get_question(question)).id, answer);
+            }
             return "Created.";
         case "delete_question":
             if (!id) return "That question does not exist.";
