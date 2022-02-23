@@ -187,4 +187,22 @@ get_events().then((entries) =>
     })
 );
 
-const trivia_questions = [["Which element is Shenhe?", ["cryo"]]];
+const trivia_questions = [
+    ["Which element is Shenhe?", ["cryo"]],
+    [
+        "Which two elements form the MELT reaction (separate by space)?",
+        ["cryo pyro", "pyro cryo"],
+    ],
+    [
+        "Which two elements form the FREEZE reaction (separate by space)?",
+        ["cryo hydro", "hydro cryo"],
+    ],
+    [
+        "Which element (for which there are playable characters) CANNOT be swirled (except anemo)?",
+        ["geo"],
+    ],
+    [
+        "Which element does Tartaglia (boss)'s first phase have bonus resistance against?",
+        ["hydro"],
+    ],
+];
