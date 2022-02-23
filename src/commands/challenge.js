@@ -14,7 +14,7 @@ const amount = {
     description: "the amount to wager",
     type: "INTEGER",
     required: true,
-    minValue: 1,
+    minValue: 0,
 };
 
 export const command = {
@@ -43,11 +43,13 @@ export async function execute(interaction) {
     if (!interaction.channel.permissionsFor(opponent).has("VIEW_CHANNEL")) {
         return "That user does not have access to this channel, so they would not be able to see your challenge.";
     }
-    if ((await get_money(interaction.user.id)) < amount) {
-        return "You do not have enough money for that.";
-    }
-    if ((await get_money(opponent.id)) < amount) {
-        return "Your opponent does not have enough money for that.";
+    if (amount > 0) {
+        if ((await get_money(interaction.user.id)) < amount) {
+            return "You do not have enough money for that.";
+        }
+        if ((await get_money(opponent.id)) < amount) {
+            return "Your opponent does not have enough money for that.";
+        }
     }
     const sub = interaction.options.getSubcommand();
     var win, message, response;
@@ -58,7 +60,7 @@ export async function execute(interaction) {
                 embeds: [
                     {
                         title: "Fight Challenge",
-                        description: `${interaction.user} has challenged ${opponent} to a (random) fight for ${amount} ${emojis.coin}! They have 60 seconds to accept.`,
+                        description: `${interaction.user} has challenged ${opponent} to a (random) fight for ${amount} ${emojis.coin} They have 60 seconds to accept.`,
                         color: "ff0088",
                     },
                 ],
@@ -140,7 +142,7 @@ export async function execute(interaction) {
                     },
                 ],
             });
-        } else {
+        } else if (amount > 0) {
             await add_money(giver.id, -amount);
             await add_money(receiver.id, amount);
             await interaction.channel.send({
@@ -177,7 +179,7 @@ const fight_actions = [
         -10,
     ],
     [(x, y) => `${x} summoned Shenhe's spirit to their aid`, 40, 80],
-    [(x, y) => `${x} smited ${y}`, 20, 60],
+    [(x, y) => `${x} smote ${y}`, 20, 60],
     [(x, y) => `${x} rolled the dice of ${y}'s fate`, 0, 100],
 ];
 
@@ -193,8 +195,10 @@ function do_fight(user_1, user_2) {
         const message = msgfn(users[0].user, users[1].user);
         users[1].hp -= damage;
         if (users[1].hp <= 0) {
-            actions.push(`${message} for ${damage} damage, knocking them out.`);
-            actions.push(`${users[0].user} wins!`);
+            actions.push(
+                `${message} for **${damage} damage**, knocking them out.`
+            );
+            actions.push(`**${users[0].user} wins!**`);
             break;
         } else {
             actions.push(
