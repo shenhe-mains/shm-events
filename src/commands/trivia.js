@@ -96,11 +96,8 @@ export async function execute(interaction) {
     const id = await get_question(question);
     switch (interaction.options.getSubcommand()) {
         case "create_question":
-            try {
-                await create_question(question, image);
-            } catch {
-                return "Error; that question probably already exists.";
-            }
+            if (id) return "That question already exists.";
+            await create_question(question, image);
             return "Created.";
         case "delete_question":
             if (!id) return "That question does not exist.";
