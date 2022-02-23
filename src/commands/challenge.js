@@ -127,17 +127,31 @@ export async function execute(interaction) {
         }
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
-        await add_money(giver.id, -amount);
-        await add_money(receiver.id, amount);
-        await interaction.channel.send({
-            embeds: [
-                {
-                    title: "Challenge Payment Complete",
-                    description: `${giver} paid ${receiver} ${amount} ${emojis.coin} for the challenge.`,
-                    color: config.color,
-                },
-            ],
-        });
+        if (
+            Math.min(await get_money(giver), await get_money(receiver)) < amount
+        ) {
+            await interaction.channel.send({
+                embeds: [
+                    {
+                        title: "Challenge Payment Failed",
+                        description: `Either ${giver} or ${receiver} no longer has ${amount} ${emojis.coin}, so the challenge has been invalidated.`,
+                        color: "RED",
+                    },
+                ],
+            });
+        } else {
+            await add_money(giver.id, -amount);
+            await add_money(receiver.id, amount);
+            await interaction.channel.send({
+                embeds: [
+                    {
+                        title: "Challenge Payment Complete",
+                        description: `${giver} paid ${receiver} ${amount} ${emojis.coin} for the challenge.`,
+                        color: config.color,
+                    },
+                ],
+            });
+        }
     }
 }
 
