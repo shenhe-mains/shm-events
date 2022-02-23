@@ -429,8 +429,8 @@ export async function get_question(question) {
     return (
         (
             await db.query(
-                `SELECT id FROM trivia_questions WHERE question LIKE $1`,
-                [question.replaceAll("%", "\\%") + "%"]
+                `SELECT id FROM trivia_questions WHERE CHARINDEX($1, question) > 0`,
+                [question]
             )
         ).rows[0] || { id: undefined }
     ).id;
