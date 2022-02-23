@@ -80,7 +80,11 @@ export async function confirm(interaction, embed, confirm, cancel, timeout) {
         });
         if (response.customId == "confirm") {
             try {
-                await interaction.deleteReply();
+                await interaction.editReply({
+                    content: "Confirmed!",
+                    embeds: [],
+                    components: [],
+                });
             } finally {
                 return true;
             }
