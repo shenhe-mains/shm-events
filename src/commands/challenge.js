@@ -129,31 +129,35 @@ export async function execute(interaction) {
         }
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
-        if (
-            Math.min(await get_money(giver.id), await get_money(receiver.id)) <
-            amount
-        ) {
-            await interaction.channel.send({
-                embeds: [
-                    {
-                        title: "Challenge Payment Failed",
-                        description: `Either ${giver} or ${receiver} no longer has ${amount} ${emojis.coin}, so the challenge has been invalidated.`,
-                        color: "RED",
-                    },
-                ],
-            });
-        } else if (amount > 0) {
-            await add_money(giver.id, -amount);
-            await add_money(receiver.id, amount);
-            await interaction.channel.send({
-                embeds: [
-                    {
-                        title: "Challenge Payment Complete",
-                        description: `${giver} paid ${receiver} ${amount} ${emojis.coin} for the challenge.`,
-                        color: config.color,
-                    },
-                ],
-            });
+        if (amount > 0) {
+            if (
+                Math.min(
+                    await get_money(giver.id),
+                    await get_money(receiver.id)
+                ) < amount
+            ) {
+                await interaction.channel.send({
+                    embeds: [
+                        {
+                            title: "Challenge Payment Failed",
+                            description: `Either ${giver} or ${receiver} no longer has ${amount} ${emojis.coin}, so the challenge has been invalidated.`,
+                            color: "RED",
+                        },
+                    ],
+                });
+            } else {
+                await add_money(giver.id, -amount);
+                await add_money(receiver.id, amount);
+                await interaction.channel.send({
+                    embeds: [
+                        {
+                            title: "Challenge Payment Complete",
+                            description: `${giver} paid ${receiver} ${amount} ${emojis.coin} for the challenge.`,
+                            color: config.color,
+                        },
+                    ],
+                });
+            }
         }
     }
 }
@@ -164,23 +168,26 @@ const fight_actions = [
     [(x, y) => `${x} threw a leaf at ${y}`, 0, 0],
     [(x, y) => `${x} ran over ${y}`, 40, 60],
     [(x, y) => `${x} shot ${y}`, 50, 75],
-    [(x, y) => `${x} used THE MIGHT OF ZEUS on ${y}`, 100, 100],
     [(x, y) => `${x} tried to shoot ${y}, but missed`, 0, 0],
-    [
-        (x, y) =>
-            `${x} used [EMOTIONAL DAMAGE](https://www.youtube.com/watch?v=i1ojUmdF42U) on ${y}`,
-        20,
-        40,
-    ],
     [
         (x, y) =>
             `${x} couldn't bring themselves to hurt ${y}, and healed them`,
         -20,
         -10,
     ],
-    [(x, y) => `${x} summoned Shenhe's spirit to their aid`, 40, 80],
     [(x, y) => `${x} smote ${y}`, 20, 60],
     [(x, y) => `${x} rolled the dice of ${y}'s fate`, 0, 100],
+];
+
+const rare_actions = [
+    [(x, y) => `${x} used THE MIGHT OF ZEUS on ${y}`, 100, 100],
+    [
+        (x, y) =>
+            `${x} used [EMOTIONAL DAMAGE](https://www.youtube.com/watch?v=i1ojUmdF42U) on ${y}`,
+        20,
+        40,
+    ],
+    [(x, y) => `${x} summoned Shenhe's spirit to their aid`, 40, 80],
 ];
 
 function do_fight(user_1, user_2) {
@@ -189,8 +196,9 @@ function do_fight(user_1, user_2) {
     ).map((user) => ({ user, hp: 100 }));
     const actions = [];
     while (true) {
+        const actions = Math.random() < 0.1 ? rare_actions : fight_actions;
         const [msgfn, min, max] =
-            fight_actions[Math.floor(Math.random() * fight_actions.length)];
+            actions[Math.floor(Math.random() * actions.length)];
         const damage = Math.floor(Math.random() * (max - min)) + min;
         const message = msgfn(users[0].user, users[1].user);
         users[1].hp -= damage;
