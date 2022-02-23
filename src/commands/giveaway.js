@@ -307,8 +307,6 @@ async function draw(guild, giveaway) {
     }
     if (entrants.length == 0) return undefined;
     var random = Math.random() * total;
-    console.log(entrants);
-    console.log(random);
     for (const entrant of entrants) {
         if (random < entrant.weight) {
             await remove_entrant(giveaway.id, entrant.member.id);
