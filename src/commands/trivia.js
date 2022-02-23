@@ -1,3 +1,4 @@
+import { config } from "../config.js";
 import {
     add_answer,
     create_question,

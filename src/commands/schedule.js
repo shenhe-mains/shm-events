@@ -11,6 +11,7 @@ import {
 } from "../db.js";
 import { emojis } from "../utils.js";
 import { add_xp } from "../events/messageCreate.js";
+import { config } from "../config.js";
 
 export const type = {
     name: "type",
