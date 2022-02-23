@@ -52,7 +52,7 @@ export async function execute(interaction) {
     var win;
     var cancel = false;
     var message;
-    switch (interaction.getSubcommand()) {
+    switch (interaction.options.getSubcommand()) {
         case "fight":
             message = await interaction.reply({
                 embeds: [
