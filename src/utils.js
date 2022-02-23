@@ -78,7 +78,7 @@ export async function confirm(interaction, embed, confirm, cancel, timeout) {
         const response = await message.awaitMessageComponent({
             time: timeout || 60000,
         });
-        if (response.customId == "confirm") return;
+        if (response.customId == "confirm") return true;
     } catch {}
     await interaction.editReply({
         content: "Canceled!",
