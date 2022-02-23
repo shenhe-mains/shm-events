@@ -129,7 +129,7 @@ const types = {
                     title: "Trivia Question!",
                     description: `${question}\n\nYou will receive ${xp} XP for your team + ${cash} ${emojis.coin} (10 minutes to answer).`,
                     color: "ff0088",
-                    image: image || null,
+                    image: image ? { url: image } : null,
                 },
             ],
         });
