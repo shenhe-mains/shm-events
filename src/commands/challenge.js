@@ -2,32 +2,47 @@ import { config } from "../config.js";
 import { add_money, get_money } from "../db.js";
 import { emojis } from "../utils.js";
 
-const opponent = {
-    name: "opponent",
-    description: "the user to challenge",
-    type: "USER",
-    required: true,
-};
-
-const amount = {
-    name: "amount",
-    description: "the amount to wager",
-    type: "INTEGER",
-    required: true,
-    minValue: 0,
-};
-
 export const command = {
     name: "challenge",
     description: "Challenge a player to a minigame.",
     type: "CHAT_INPUT",
     options: [
-        {
-            name: "fight",
-            description: "Do a randomized 1v1 against another player.",
+        [
+            ["fight", "Do a randomized 1v1 against another player."],
+            [
+                "rps",
+                "Play Rock-Paper-Scissors against another player.",
+                [
+                    {
+                        name: "action",
+                        description: "the action to take",
+                        type: "STRING",
+                        required: true,
+                        choices: ["rock", "paper", "scissors"],
+                    },
+                ],
+            ],
+        ].map(([name, description, options]) => ({
+            name,
+            description,
             type: "SUB_COMMAND",
-            options: [opponent, amount],
-        },
+            options: [
+                {
+                    name: "opponent",
+                    description: "the user to challenge",
+                    type: "USER",
+                    required: true,
+                },
+                {
+                    name: "amount",
+                    description: "the amount to wager",
+                    type: "INTEGER",
+                    required: true,
+                    minValue: 0,
+                },
+                ...(options || []),
+            ],
+        })),
     ],
 };
 
@@ -87,6 +102,50 @@ export async function execute(interaction) {
                 ],
                 fetchReply: true,
             });
+            break;
+        case "rps":
+            await interaction.respond("Posting challenge!");
+            message = await interaction.channel.send({
+                content: opponent.toString(),
+                embeds: [
+                    {
+                        title: "Rock-Paper-Scissors Challenge",
+                        description: `${interaction.user} has challenged ${opponent} to a game of Rock-Paper-Scissors for ${amount} ${emojis.coin} They have 60 sceonds to accept.`,
+                        color: "ff0088",
+                    },
+                ],
+                components: [
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "BUTTON",
+                                style: "SECONDARY",
+                                customId: "rock",
+                                emoji: "🪨",
+                            },
+                            {
+                                type: "BUTTON",
+                                style: "SECONDARY",
+                                customId: "paper",
+                                emoji: "📄",
+                            },
+                            {
+                                type: "BUTTON",
+                                style: "SECONDARY",
+                                customId: "scissors",
+                                emoji: "✂️",
+                            },
+                            {
+                                type: "BUTTON",
+                                style: "DANGER",
+                                customId: "cancel",
+                                label: "DECLINE",
+                            },
+                        ],
+                    },
+                ],
+            });
     }
     try {
         const click = await message.awaitMessageComponent({
@@ -126,6 +185,37 @@ export async function execute(interaction) {
                     components: [],
                 });
                 win = fight_winner.id == interaction.user.id;
+            case "rps":
+                const rps_action = interaction.options.getString("action");
+                if (rps_action == response) {
+                    await message.edit({
+                        embeds: [
+                            {
+                                title: "Tie!",
+                                description: `${interaction.user} and ${opponent} both picked ${rps_action}!`,
+                                color: config.color,
+                            },
+                        ],
+                        components: [],
+                    });
+                } else {
+                    win =
+                        (rps_action == "rock" && response == "scissors") ||
+                        (rps_action == "scissors" && response == "paper") ||
+                        (rps_action == "paper" && response == "rock");
+                    await message.edit({
+                        embeds: [
+                            {
+                                title: `${
+                                    (win ? interaction.user : opponent.user).tag
+                                } wins!`,
+                                description: `${rps_action} beats ${response}!`,
+                                color: config.color,
+                            },
+                        ],
+                        components: [],
+                    });
+                }
         }
         const giver = win ? opponent : interaction.user;
         const receiver = win ? interaction.user : opponent;
