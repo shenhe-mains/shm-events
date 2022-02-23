@@ -112,6 +112,7 @@ export async function execute(interaction) {
                     interaction.member,
                     opponent
                 );
+                console.log(fight_winner);
                 await interaction.editReply({
                     embeds: [
                         {
