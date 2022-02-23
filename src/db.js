@@ -377,7 +377,7 @@ export async function add_event(channel_id, type, min_period, max_period) {
             channel_id, type, min_period, max_period
         ) VALUES ($1, $2, $3, $4) ON CONFLICT (
             channel_id, type
-        ) DO UPDATE SET min_period = $2, max_period = $3`,
+        ) DO UPDATE SET min_period = $3, max_period = $4`,
         [channel_id, type, min_period, max_period]
     );
 }
