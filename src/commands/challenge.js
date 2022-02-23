@@ -17,7 +17,10 @@ export const command = {
                     description: "the action to take",
                     type: "STRING",
                     required: true,
-                    choices: ["rock", "paper", "scissors"],
+                    choices: ["rock", "paper", "scissors"].map((item) => ({
+                        name: item,
+                        value: item,
+                    })),
                 },
             ],
         ],
