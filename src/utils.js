@@ -9,14 +9,15 @@ export class Response extends Error {
 }
 
 export async function ac_substring(interaction, list, map) {
-    const query = interaction.options.getFocused();
+    const query = interaction.options.getFocused().toLowerCase();
     await interaction.respond(
         list
-            .filter((item) => item.match(query))
+            .filter((item) => item.toLowerCase().match(query))
             .map((item) =>
                 item.length > 100 ? item.substring(0, 97) + "..." : item
             )
             .map((item) => ({ name: item, value: map ? map.get(item) : item }))
+            .slice(0, 25)
     );
 }
 
