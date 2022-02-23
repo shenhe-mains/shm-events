@@ -101,7 +101,7 @@ export async function execute(interaction) {
             break;
         case "fine":
             await add_money(target.id, -amount);
-            await interaction.editReply({
+            await interaction.reply({
                 embeds: [
                     {
                         title: "User fined!",
