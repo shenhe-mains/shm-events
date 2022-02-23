@@ -1,11 +1,14 @@
 import { client } from "../client.js";
 import {
     add_event,
+    add_money,
     delete_event,
     get_event,
     get_events,
     post_event,
 } from "../db.js";
+import { emojis } from "../utils.js";
+import { add_xp } from "../events/messageCreate.js";
 
 export const type = {
     name: "type",
@@ -109,8 +112,41 @@ export async function execute(interaction) {
 
 const types = {
     trivia: async (channel) => {
-        console.log(channel);
-        await channel.send("test");
+        const [question, answers] =
+            trivia_questions[
+                Math.floor(Math.random() * trivia_questions.length)
+            ];
+        const xp = Math.floor(Math.random() * 10 + 45);
+        const cash = Math.floor(Math.random() * 100 + 300);
+        await channel.send({
+            embeds: [
+                {
+                    title: "Trivia Question!",
+                    description: `${question}\n\nYou will receive ${xp} XP for your team + ${cash} ${emojis.coin} (10 minutes to answer).`,
+                    color: "ff0088",
+                },
+            ],
+        });
+        try {
+            const [message] = await channel.awaitMessages({
+                filter: (message) =>
+                    answers.indexOf(message.content.toLowerCase()) != -1,
+                max: 1,
+                time: 600000,
+                errors: ["time"],
+            });
+            await add_xp(message.member, xp, true);
+            await add_money(message.author.id, cash);
+            await message.reply({
+                embeds: [
+                    {
+                        title: "Congratulations!",
+                        description: `You have won ${xp} XP and ${cash} ${emojis.coin}`,
+                        color: "GREEN",
+                    },
+                ],
+            });
+        } catch {}
     },
 };
 
@@ -118,6 +154,7 @@ const scheduled = new Map();
 
 async function schedule(type, channel) {
     const event = await get_event(channel.id, type);
+    if (!event) return;
     const seconds =
         Math.random() * (event.max_period - event.min_period) +
         event.min_period;
@@ -146,3 +183,5 @@ get_events().then((entries) =>
         } catch {}
     })
 );
+
+const trivia_questions = [["Which element is Shenhe?", ["cryo"]]];
