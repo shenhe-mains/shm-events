@@ -146,7 +146,9 @@ const types = {
                     },
                 ],
             });
-        } catch {}
+        } catch (error) {
+            console.error(error);
+        }
     },
 };
 
