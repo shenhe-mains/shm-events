@@ -3,6 +3,7 @@ import {
     add_event,
     add_money,
     delete_event,
+    delete_question,
     get_event,
     get_events,
     list_answers,
@@ -79,6 +80,21 @@ export const command = {
             type: "SUB_COMMAND",
             options: [type, channel],
         },
+        {
+            name: "single",
+            description: "Trigger an event once.",
+            type: "SUB_COMMAND",
+            options: [
+                type,
+                channel,
+                {
+                    name: "delay",
+                    description: "the delay (seconds)",
+                    type: "INTEGER",
+                    minValue: 0,
+                },
+            ],
+        },
     ],
 };
 
@@ -112,6 +128,9 @@ export async function execute(interaction) {
             } catch {}
         }
         return "Deleted!";
+    } else if (sub == "single") {
+        const delay = interaction.options.getInteger("delay") || 0;
+        setTimeout(() => types[type](channel), delay * 1000);
     }
 }
 
@@ -120,6 +139,7 @@ const types = {
         const questions = await list_questions();
         const { id, question, image } =
             questions[Math.floor(Math.random() * questions.length)];
+        await delete_question(question);
         const answers = await list_answers(id);
         const xp = Math.floor(Math.random() * 40 + 120);
         const cash = Math.floor(Math.random() * 200 + 400);
