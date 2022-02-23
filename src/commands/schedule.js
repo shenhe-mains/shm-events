@@ -145,7 +145,6 @@ const types = {
         const xp = Math.floor(Math.random() * 20 + 80);
         const cash = Math.floor(Math.random() * 200 + 400);
         await channel.send({
-            content: "<@&946166216018522152>",
             embeds: [
                 {
                     title: "Trivia Question!",
