@@ -211,7 +211,9 @@ export async function execute(interaction) {
                                 title: `${
                                     (win ? interaction.user : opponent.user).tag
                                 } wins!`,
-                                description: `${rps_action} beats ${response}!`,
+                                description: `${
+                                    win ? rps_action : response
+                                } beats ${win ? response : rps_action}!`,
                                 color: config.color,
                             },
                         ],
