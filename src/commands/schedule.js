@@ -131,6 +131,7 @@ export async function execute(interaction) {
     } else if (sub == "single") {
         const delay = interaction.options.getInteger("delay") || 0;
         setTimeout(() => types[type](channel), delay * 1000);
+        return "Posted!";
     }
 }
 
