@@ -128,13 +128,14 @@ const types = {
             ],
         });
         try {
-            const [message] = await channel.awaitMessages({
+            const message = await channel.awaitMessages({
                 filter: (message) =>
                     answers.indexOf(message.content.toLowerCase()) != -1,
                 max: 1,
                 time: 600000,
                 errors: ["time"],
             });
+            console.log(message);
             await add_xp(message.member, xp, true);
             await add_money(message.author.id, cash);
             await message.reply({
