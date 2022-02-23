@@ -94,7 +94,6 @@ export async function execute(interaction) {
     } catch {
         response = "cancel";
     }
-    console.log(response);
     if (response == "cancel") {
         await interaction.editReply({
             embeds: [
@@ -176,13 +175,14 @@ function do_fight(user_1, user_2) {
         const message = msgfn(users[0].user, users[1].user);
         users[1].hp -= damage;
         if (users[1].hp <= 0) {
-            actions.push(`${message}, knocking them out.`);
+            actions.push(`${message} for ${damage} damage, knocking them out.`);
             actions.push(`${users[0].user} wins!`);
             break;
         } else {
             actions.push(
                 `${message} for ${damage} damage; ${users[1].user} is on ${users[1].hp} HP.`
             );
+            [users[0], users[1]] = [users[1], users[0]];
         }
     }
     return [users[0], actions.join("\n")];
