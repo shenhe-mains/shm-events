@@ -5,10 +5,10 @@ import { add_xp } from "../../events/messageCreate.js";
 export const name = "war effort";
 export const description =
     "Enlist help in the Ganyu vs. Ayaka event! Each unit is worth an hour of XP (only for your team).";
-export const cost = 10;
-export const cooldown = 10;
-export const max = 5;
-export const max_bulk = 2;
+export const cost = 2500;
+export const cooldown = 86400;
+export const max = 0;
+export const max_bulk = 1;
 
 export async function validate(interaction, amount) {
     if (

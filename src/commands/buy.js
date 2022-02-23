@@ -42,8 +42,8 @@ export async function execute(interaction) {
     if (!item) {
         return "There is no item by that name.";
     }
+    const amount = interaction.options.getInteger("amount") || 1;
     if (item.max_bulk > 0) {
-        const amount = interaction.options.getInteger("amount") || 1;
         if (amount > item.max_bulk) {
             return `You can only buy up to ${item.max_bulk} at once.`;
         }
