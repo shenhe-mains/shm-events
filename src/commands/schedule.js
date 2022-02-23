@@ -96,6 +96,7 @@ export async function execute(interaction) {
             await types[type](channel);
         }
         await schedule(type, channel);
+        console.log("DONE");
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
@@ -155,7 +156,6 @@ const scheduled = new Map();
 
 async function schedule(type, channel) {
     const event = await get_event(channel.id, type);
-    console.log(event);
     if (!event) return;
     const seconds =
         Math.random() * (event.max_period - event.min_period) +
