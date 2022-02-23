@@ -5,6 +5,8 @@ import {
     delete_event,
     get_event,
     get_events,
+    list_answers,
+    list_questions,
     post_event,
 } from "../db.js";
 import { emojis } from "../utils.js";
@@ -80,6 +82,9 @@ export const command = {
 };
 
 export async function execute(interaction) {
+    if (config.owners.indexOf(interaction.user.id) == -1) {
+        return "Only bot owners can use schedule commands.";
+    }
     const sub = interaction.options.getSubcommand();
     const type = interaction.options.getString("type");
     const channel = interaction.options.getChannel("channel");
@@ -111,10 +116,10 @@ export async function execute(interaction) {
 
 const types = {
     trivia: async (channel) => {
-        const [question, answers] =
-            trivia_questions[
-                Math.floor(Math.random() * trivia_questions.length)
-            ];
+        const questions = await list_questions();
+        const { id, question } =
+            questions[Math.floor(Math.random() * questions.length)];
+        const answers = await list_answers(id);
         const xp = Math.floor(Math.random() * 10 + 45);
         const cash = Math.floor(Math.random() * 100 + 300);
         await channel.send({
@@ -184,23 +189,3 @@ get_events().then((entries) =>
         } catch {}
     })
 );
-
-const trivia_questions = [
-    ["Which element is Shenhe?", ["cryo"]],
-    [
-        "Which two elements form the MELT reaction (separate by space)?",
-        ["cryo pyro", "pyro cryo"],
-    ],
-    [
-        "Which two elements form the FREEZE reaction (separate by space)?",
-        ["cryo hydro", "hydro cryo"],
-    ],
-    [
-        "Which element (for which there are playable characters) CANNOT be swirled (except anemo)?",
-        ["geo"],
-    ],
-    [
-        "Which element does Tartaglia (boss)'s first phase have bonus resistance against?",
-        ["hydro"],
-    ],
-];

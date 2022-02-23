@@ -176,6 +176,9 @@ export const command = {
 };
 
 export async function execute(interaction) {
+    if (config.owners.indexOf(interaction.user.id) == -1) {
+        return "Only bot owners can use giveaway commands.";
+    }
     const sub = interaction.options.getSubcommand();
     const title = await interaction.options.getString("title");
     if (sub == "create") {

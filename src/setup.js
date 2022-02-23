@@ -100,5 +100,19 @@ import { db } from "./db_client.js";
         )`
     );
 
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS trivia_questions (
+            id SERIAL,
+            question VARCHAR(512) PRIMARY KEY NOT NULL
+        )`
+    );
+
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS trivia_answers (
+            id INTEGER REFERENCES trivia_questions(id) ON DELETE CASCADE,
+            answer VARCHAR(128) NOT NULL
+        )`
+    );
+
     process.exit();
 })();

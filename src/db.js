@@ -408,3 +408,50 @@ export async function get_event(channel_id, type) {
 export async function get_events() {
     return (await db.query(`SELECT * FROM random_events`)).rows;
 }
+
+export async function create_question(question) {
+    await db.query(`INSERT INTO trivia_questions (question) VALUES ($1)`, [
+        question,
+    ]);
+}
+
+export async function delete_question(question) {
+    await db.query(`DELETE FROM trivia_questions WHERE question = $1`, [
+        question,
+    ]);
+}
+
+export async function get_question(question) {
+    return (
+        (
+            await db.query(
+                `SELECT id FROM trivia_questions WHERE question = $1`,
+                [question]
+            )
+        ).rows[0] || { id: undefined }
+    ).id;
+}
+
+export async function add_answer(id, answer) {
+    await db.query(`INSERT INTO trivia_answers (id, answer) VALUES ($1, $2)`, [
+        id,
+        answer,
+    ]);
+}
+
+export async function delete_answer(id, answer) {
+    await db.query(`DELETE FROM trivia_answers WHERE id = $1 AND answer = $2`, [
+        id,
+        answer,
+    ]);
+}
+
+export async function list_answers(id) {
+    return (
+        await db.query(`SELECT answer FROM trivia_answers WHERE id = $1`, [id])
+    ).rows.map((entry) => entry.answer);
+}
+
+export async function list_questions() {
+    return (await db.query(`SELECT * FROM trivia_questions`)).rows;
+}
