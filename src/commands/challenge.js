@@ -188,5 +188,5 @@ function do_fight(user_1, user_2) {
             [users[0], users[1]] = [users[1], users[0]];
         }
     }
-    return [users[0], actions.join("\n")];
+    return [users[0].user, actions.join("\n")];
 }
