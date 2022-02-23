@@ -79,9 +79,7 @@ export async function confirm(interaction, embed, confirm, cancel, timeout) {
             time: timeout || 60000,
         });
         if (response.customId == "confirm") return;
-    } catch (error) {
-        console.error(error);
-    }
+    } catch {}
     await interaction.editReply({
         content: "Canceled!",
         embeds: [],
