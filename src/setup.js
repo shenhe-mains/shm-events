@@ -102,8 +102,8 @@ import { db } from "./db_client.js";
 
     await db.query(
         `CREATE TABLE IF NOT EXISTS trivia_questions (
-            id SERIAL,
-            question VARCHAR(512) PRIMARY KEY NOT NULL
+            id SERIAL PRIMARY KEY,
+            question VARCHAR(512) NOT NULL
         )`
     );
 
