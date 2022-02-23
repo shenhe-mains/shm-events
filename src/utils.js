@@ -13,6 +13,9 @@ export async function ac_substring(interaction, list, map) {
     await interaction.respond(
         list
             .filter((item) => item.match(query))
+            .map((item) =>
+                item.length > 100 ? item.substring(0, 97) + "..." : item
+            )
             .map((item) => ({ name: item, value: map ? map.get(item) : item }))
     );
 }

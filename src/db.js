@@ -423,10 +423,13 @@ export async function delete_question(question) {
 }
 
 export async function get_question(question) {
+    if (question.endsWith("...")) {
+        question = question.substring(0, question.length - 3);
+    }
     return (
         (
             await db.query(
-                `SELECT id FROM trivia_questions WHERE question = $1`,
+                `SELECT id FROM trivia_questions WHERE question LIKE $1%`,
                 [question]
             )
         ).rows[0] || { id: undefined }
