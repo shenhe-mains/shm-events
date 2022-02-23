@@ -94,14 +94,23 @@ export async function execute(interaction) {
             await types[type](channel);
         }
         await schedule(type, channel);
+        return "Created!";
     } else if (sub == "destroy") {
         await delete_event(channel.id, type);
+        const key = channel.id + "/" + type;
+        if (scheduled.has(key)) {
+            try {
+                clearTimeout(scheduled.get(key));
+            } catch {}
+        }
+        return "Deleted!";
     }
 }
 
 const types = {
     trivia: async (channel) => {
-        channel.send("test");
+        console.log(channel);
+        await channel.send("test");
     },
 };
 
