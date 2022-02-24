@@ -10,7 +10,7 @@ import {
     list_questions,
     post_event,
 } from "../db.js";
-import { emojis } from "../utils.js";
+import { display_time, emojis } from "../utils.js";
 import { add_xp } from "../events/messageCreate.js";
 import { config } from "../config.js";
 
@@ -203,7 +203,8 @@ async function schedule(type, channel) {
             clearTimeout(scheduled.get(key));
         } catch {}
     }
-    const delay = seconds * 1000 - (new Date() - event.last);
+    const now = new Date();
+    const delay = seconds * 1000 - (now - event.last);
     scheduled.set(
         key,
         setTimeout(() => {
@@ -212,11 +213,10 @@ async function schedule(type, channel) {
             schedule(type, channel);
         }, delay)
     );
+    now.setMilliseconds(now.getMilliseconds() + delay);
     await (
         await client.channels.fetch("939295929121513472")
-    ).send(
-        `Event \`${type}\` is triggering in ${channel} in ${delay} milliseconds.`
-    );
+    ).send(`Event \`${type}\` is scheduled to trigger ${display_time(now)}`);
 }
 
 get_events().then((entries) =>
