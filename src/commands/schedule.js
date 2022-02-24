@@ -203,14 +203,20 @@ async function schedule(type, channel) {
             clearTimeout(scheduled.get(key));
         } catch {}
     }
+    const delay = seconds * 1000 - (new Date() - event.last);
     scheduled.set(
         key,
         setTimeout(() => {
             post_event(channel.id, type);
             types[type](channel);
             schedule(type, channel);
-        }, seconds * 1000 - (new Date() - event.last))
+        }, delay)
     );
+    await client.channels
+        .fetch("939295929121513472")
+        .send(
+            `Event \`${type}\` is triggering in ${channel} in ${delay} milliseconds.`
+        );
 }
 
 get_events().then((entries) =>
