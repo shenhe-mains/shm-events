@@ -13,6 +13,9 @@ const max_salary = 1000;
 const threshold = 5000;
 
 export async function execute(interaction) {
+    if (interaction.channel.id == "805458033471782980") {
+        return "Please use this command in <#805458034251530262>.";
+    }
     const last = await last_salary(interaction.user.id);
     if (new Date() - last < cooldown * 1000) {
         last.setSeconds(last.getSeconds() + cooldown);

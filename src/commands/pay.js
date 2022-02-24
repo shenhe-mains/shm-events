@@ -23,6 +23,9 @@ export const command = {
 };
 
 export async function execute(interaction) {
+    if (interaction.channel.id == "805458033471782980") {
+        return "Please use this command in <#805458034251530262>.";
+    }
     const target = interaction.options.getMember("recipient", true);
     const amount = interaction.options.getInteger("amount");
     if ((await get_money(interaction.user.id)) < amount) {

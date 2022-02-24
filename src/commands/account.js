@@ -17,6 +17,9 @@ export const command = {
 };
 
 export async function execute(interaction) {
+    if (interaction.channel.id == "805458033471782980") {
+        return "Please use this command in <#805458034251530262>.";
+    }
     const member = interaction.options.getMember("user") || interaction.member;
     await interaction.reply({
         embeds: [
