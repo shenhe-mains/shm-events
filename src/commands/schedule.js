@@ -182,7 +182,19 @@ const types = {
                     },
                 ],
             });
-        } catch {}
+        } catch (error) {
+            console.error(error);
+            await channel.send({
+                embeds: [
+                    {
+                        title: "Trivia Expired",
+                        description:
+                            "The trivia question expired (or attempting to reward the winner failed).",
+                        color: "RED",
+                    },
+                ],
+            });
+        }
     },
     test: async (channel) => {
         await channel.send("test");
