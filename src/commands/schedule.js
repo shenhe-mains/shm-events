@@ -158,6 +158,7 @@ const types = {
             const messages = await channel.awaitMessages({
                 filter: (message) =>
                     message.channel.id == channel.id &&
+                    !message.member.roles.cache.has("838116854866116608") &&
                     answers.indexOf(message.content.toLowerCase()) != -1,
                 max: 1,
                 time: 600000,
