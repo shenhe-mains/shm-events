@@ -199,9 +199,10 @@ async function schedule(type, channel) {
     scheduled.set(
         key,
         setTimeout(() => {
+            post_event(channel.id, type);
             types[type](channel);
             schedule(type, channel);
-        }, seconds * 1000)
+        }, seconds * 1000 - (new Date() - event.last))
     );
 }
 
