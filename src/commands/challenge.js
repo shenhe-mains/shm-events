@@ -283,16 +283,25 @@ const fight_actions = [
         15,
         30,
     ],
-    [
-        (x, y) => `${x} called the tides (Beidou's Tidecaller) against ${y}`,
-        40,
-        60,
-    ],
+    [(x, y) => `${x} called the tides (Beidou's Tidecaller)`, 40, 60],
     [(x, y) => `${x} gave ${y} Bennett's luck`, 50, 100],
     [(x, y) => `${x} exorcised ${y} with their yang energy`, 60, 80],
-    [(x, y) => `${x} summoned a phoenix (Diluc's Dawn) to attack ${y}`, 60, 80],
-    [(x, y) => `${x}'s Signature Mix was so bad that it poisoned ${y}`, 50, 75],
+    [(x, y) => `${x} summoned a phoenix (Diluc)`, 60, 80],
+    [
+        (x, y) =>
+            `${x}'s Signature Mix (Diona) was so bad that it poisoned ${y}`,
+        50,
+        75,
+    ],
     [(x, y) => `${x} struck down ${y} with their Lightfall Sword`, 60, 90],
+    [(x, y) => `${x} struck ${y} with their Frostflake Arrow`, 40, 80],
+    [(x, y) => `${x} rallied their army with their War Banner (Gorou)`, 20, 40],
+    [(x, y) => `${x} struck ${y} with Spirit Soother (Hu Tao)`, 60, 100],
+    [(x, y) => `${x} calls upon the wind's protection (Jean)`, 30, 60],
+    [(x, y) => `${x} unleashed Chihayaburu (Kaedehara Kazuha)`, 25, 50],
+    [(x, y) => `${x} unleashed a frigid blast (Kaeya), freezing ${y}`, 40, 60],
+    [(x, y) => `${x} struck ${y} with Kamisato Art: Kabuki`, 40, 60],
+    [(x, y) => `${x} unleashed the power of lightning (Keqing)`, 50, 75],
 ];
 
 const rare_actions = [
