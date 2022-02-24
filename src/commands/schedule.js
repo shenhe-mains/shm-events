@@ -216,7 +216,11 @@ async function schedule(type, channel) {
     now.setMilliseconds(now.getMilliseconds() + delay);
     await (
         await client.channels.fetch("939295929121513472")
-    ).send(`Event \`${type}\` is scheduled to trigger ${display_time(now)}`);
+    ).send(
+        `Event \`${type}\` is scheduled to trigger in ${channel}: ${display_time(
+            now
+        )}`
+    );
 }
 
 get_events().then((entries) =>
