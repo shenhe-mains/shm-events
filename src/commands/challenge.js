@@ -158,7 +158,7 @@ export async function execute(interaction) {
         response = "cancel";
     }
     if (response == "cancel") {
-        await interaction.editReply({
+        await message.edit({
             embeds: [
                 {
                     title: "Challenge Declined!",
