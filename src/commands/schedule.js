@@ -226,6 +226,8 @@ get_events().then((entries) =>
                 entry.type,
                 await client.channels.fetch(entry.channel_id)
             );
-        } catch {}
+        } catch (error) {
+            console.error(error);
+        }
     })
 );
