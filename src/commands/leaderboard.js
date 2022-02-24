@@ -8,6 +8,9 @@ export const command = {
 };
 
 export async function execute(interaction) {
+    if (config.owners.indexOf(interaction.user.id) == -1) {
+        return "This command has been temporarily disabled to avoid skewing the results and/or which team people decide to join. Sorry.";
+    }
     const lb = [];
     for (const entry of await leaderboard()) {
         try {
