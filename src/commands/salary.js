@@ -33,7 +33,7 @@ export async function execute(interaction) {
             {
                 title: "Salary given",
                 description: `You received ${amount} ${emojis.coin}${
-                    broke ? " (+50% bonus for poor players)" : ""
+                    broke ? " (+50% bonus for players with low funds)" : ""
                 }.`,
                 color: "GREEN",
             },
