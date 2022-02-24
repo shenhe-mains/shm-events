@@ -24,6 +24,10 @@ export const type = {
             name: "trivia",
             value: "trivia",
         },
+        {
+            name: "test",
+            value: "test",
+        },
     ],
 };
 
@@ -179,6 +183,9 @@ const types = {
                 ],
             });
         } catch {}
+    },
+    test: async (channel) => {
+        await channel.send("test");
     },
 };
 
