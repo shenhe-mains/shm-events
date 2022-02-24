@@ -1,5 +1,5 @@
 export const emojis = {
-    coin: "<:money:945486340861083648>",
+    coin: "<:exorcium:945486340861083648>",
 };
 
 export class Response extends Error {
