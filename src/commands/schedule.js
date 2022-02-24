@@ -212,11 +212,11 @@ async function schedule(type, channel) {
             schedule(type, channel);
         }, delay)
     );
-    await client.channels
-        .fetch("939295929121513472")
-        .send(
-            `Event \`${type}\` is triggering in ${channel} in ${delay} milliseconds.`
-        );
+    await (
+        await client.channels.fetch("939295929121513472")
+    ).send(
+        `Event \`${type}\` is triggering in ${channel} in ${delay} milliseconds.`
+    );
 }
 
 get_events().then((entries) =>
