@@ -189,7 +189,8 @@ const types = {
                     {
                         title: "Trivia Expired",
                         description:
-                            "The trivia question expired (or attempting to reward the winner failed).",
+                            "The trivia question expired (or attempting to reward the winner failed). The correct answers were:\n\n" +
+                            answers.map((answer) => `- ${answer}`).join("\n"),
                         color: "RED",
                     },
                 ],
