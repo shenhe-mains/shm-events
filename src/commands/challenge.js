@@ -114,7 +114,7 @@ export async function execute(interaction) {
                 embeds: [
                     {
                         title: "Rock-Paper-Scissors Challenge",
-                        description: `${interaction.user} has challenged ${opponent} to a game of Rock-Paper-Scissors for ${amount} ${emojis.coin} They have 60 sceonds to accept.`,
+                        description: `${interaction.user} has challenged ${opponent} to a game of Rock-Paper-Scissors for ${amount} ${emojis.coin} They have 60 seconds to accept.`,
                         color: "ff0088",
                     },
                 ],
