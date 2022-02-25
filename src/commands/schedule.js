@@ -138,11 +138,8 @@ export async function execute(interaction) {
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
-        const key = channel.id + "/" + type;
-        if (scheduled.has(key)) {
-            try {
-                clearTimeout(scheduled.get(key));
-            } catch {}
+        if (scheduled.has(channel.id)) {
+            scheduled.get(channel.id).delete(type);
         }
         return "Deleted!";
     } else if (sub == "single") {
@@ -150,12 +147,10 @@ export async function execute(interaction) {
         setTimeout(() => types[type](channel), delay * 1000);
         return "Posted!";
     } else if (sub == "list") {
-        console.log(scheduled);
         const blocks = [];
         for (const [channel_id, group] of scheduled) {
             const block = [];
             for (const [type, item] of group) {
-                console.log(type, item);
                 block.push(
                     `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
                 );
