@@ -167,7 +167,7 @@ const types = {
         const { id, question, image } =
             questions[Math.floor(Math.random() * questions.length)];
         const answers = await list_answers(id);
-        await delete_question(question);
+        await delete_question(id);
         const xp = Math.floor(Math.random() * 20 + 80);
         const cash = Math.floor(Math.random() * 200 + 400);
         await channel.send({
