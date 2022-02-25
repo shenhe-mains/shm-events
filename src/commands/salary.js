@@ -7,7 +7,6 @@ export const command = {
     type: "CHAT_INPUT",
 };
 
-const cooldown = 86400;
 const min_salary = 500;
 const max_salary = 1000;
 const threshold = 5000;
@@ -17,10 +16,18 @@ export async function execute(interaction) {
         return "Please use this command in <#805458034251530262>.";
     }
     const last = await last_salary(interaction.user.id);
-    if (new Date() - last < cooldown * 1000) {
-        last.setSeconds(last.getSeconds() + cooldown);
+    const now = new Date();
+    if (
+        now.getDate() == last.getDate() &&
+        now.getMonth() == last.getMonth() &&
+        now.getYear() == last.getYear()
+    ) {
+        now.setDate(now.getDate() + 1);
+        now.setHours(0);
+        now.setMinutes(0);
+        now.setSeconds(0);
         return `You can only use this command once every day - next pay is ${display_time(
-            last
+            now
         )}`;
     }
     await give_salary(interaction.user.id);
