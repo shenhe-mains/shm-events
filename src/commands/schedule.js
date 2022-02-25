@@ -266,7 +266,8 @@ get_events().then((entries) =>
                 await client.channels.fetch(entry.channel_id),
                 entry.min_period,
                 entry.max_period,
-                entry.activity_scaling
+                entry.activity_scaling,
+                (new Date() - entry.last) / 1000
             );
         } catch (error) {
             console.error(error);
