@@ -152,7 +152,11 @@ export async function execute(interaction) {
             const block = [];
             for (const [type, item] of group) {
                 block.push(
-                    `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
+                    `\`${type}\`: cooldown (s) [${item.min}, ${
+                        item.max
+                    }], activity scaling ${
+                        item.activity_scaling
+                    } - next ${display_time(item.date)}`
                 );
             }
             if (block.length > 0) {
