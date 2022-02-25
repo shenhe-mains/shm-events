@@ -235,7 +235,7 @@ function schedule(type, channel, min, max, activity_scaling, initial) {
     if (!scheduled.has(channel.id)) {
         scheduled.set(channel.id, new Map());
     }
-    if (schedule.get(channel.id).has(type)) {
+    if (scheduled.get(channel.id).has(type)) {
         return true;
     }
     const now = new Date();
