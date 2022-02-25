@@ -152,6 +152,7 @@ export async function execute(interaction) {
         setTimeout(() => types[type](channel), delay * 1000);
         return "Posted!";
     } else if (sub == "list") {
+        console.log(scheduled);
         const blocks = [];
         for (const [group, channel_id] of scheduled) {
             const block = [];
