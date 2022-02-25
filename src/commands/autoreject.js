@@ -6,6 +6,7 @@ const types = [
         name: "type",
         description: "the type of challenge to automatically respond to",
         type: "STRING",
+        required: true,
         choices: challenge_types.map(([x]) => ({ name: x, value: x })),
     },
 ];
