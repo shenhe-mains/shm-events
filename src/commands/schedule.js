@@ -267,8 +267,8 @@ get_events().then((entries) =>
             schedule(
                 entry.type,
                 await client.channels.fetch(entry.channel_id),
-                entry.min,
-                entry.max,
+                entry.min_period,
+                entry.max_period,
                 entry.activity_scaling
             );
         } catch (error) {
