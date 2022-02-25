@@ -64,8 +64,8 @@ export async function execute(interaction) {
     const last = await last_purchase(item.name, interaction.user.id);
     const now = new Date();
     if (last !== undefined && new Date() - last < item.cooldown * 1000) {
-        now.setSeconds(now.getSeconds() + item.cooldown);
-        return `You can buy again ${display_time(now)}.`;
+        last.setSeconds(last.getSeconds() + item.cooldown);
+        return `You can buy again ${display_time(last)}.`;
     }
     await add_money(interaction.user.id, -item.cost * amount);
     if (item.validate && !(await item.validate(interaction, amount))) {
