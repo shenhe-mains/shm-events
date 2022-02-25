@@ -155,7 +155,9 @@ export async function execute(interaction) {
                     `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
                 );
             }
-            blocks.push(`<#${channel_id}>\n${block.join("\n")}`);
+            if (block.length > 0) {
+                blocks.push(`<#${channel_id}>\n${block.join("\n")}`);
+            }
         }
         return blocks.join("\n\n") || "(none)";
     }

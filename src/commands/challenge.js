@@ -1,30 +1,32 @@
 import { config } from "../config.js";
-import { add_money, get_money } from "../db.js";
+import { add_money, get_money, is_autorejecting } from "../db.js";
 import { emojis } from "../utils.js";
+
+export const challenge_types = [
+    ["fight", "Do a randomized 1v1 against another player."],
+    [
+        "rps",
+        "Play Rock-Paper-Scissors against another player.",
+        [
+            {
+                name: "action",
+                description: "the action to take",
+                type: "STRING",
+                required: true,
+                choices: ["rock", "paper", "scissors"].map((item) => ({
+                    name: item,
+                    value: item,
+                })),
+            },
+        ],
+    ],
+];
 
 export const command = {
     name: "challenge",
     description: "Challenge a player to a minigame.",
     type: "CHAT_INPUT",
-    options: [
-        ["fight", "Do a randomized 1v1 against another player."],
-        [
-            "rps",
-            "Play Rock-Paper-Scissors against another player.",
-            [
-                {
-                    name: "action",
-                    description: "the action to take",
-                    type: "STRING",
-                    required: true,
-                    choices: ["rock", "paper", "scissors"].map((item) => ({
-                        name: item,
-                        value: item,
-                    })),
-                },
-            ],
-        ],
-    ].map(([name, description, options]) => ({
+    options: challenge_types.map(([name, description, options]) => ({
         name,
         description,
         type: "SUB_COMMAND",
@@ -71,6 +73,12 @@ export async function execute(interaction) {
         }
     }
     const sub = interaction.options.getSubcommand();
+    if (await is_autorejecting(opponent.id, sub)) {
+        return "Your opponent is not accepting that type of challenge.";
+    }
+    if (await is_autorejecting(interaction.user.id, sub)) {
+        return "You are not allowed to declare challenges of types that you are not accepting. Use `/autoreject remove` if you wish to change this.";
+    }
     var win, message, response;
     switch (sub) {
         case "fight":

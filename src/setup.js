@@ -116,5 +116,13 @@ import { db } from "./db_client.js";
         )`
     );
 
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS autoreject (
+            user_id VARCHAR(32) NOT NULL,
+            type VARCHAR(16) NOT NULL,
+            PRIMARY KEY (user_id, type)
+        )`
+    );
+
     process.exit();
 })();

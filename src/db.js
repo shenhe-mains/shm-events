@@ -466,3 +466,30 @@ export async function list_answers(id) {
 export async function list_questions() {
     return (await db.query(`SELECT * FROM trivia_questions`)).rows;
 }
+
+export async function add_autoreject(user_id, type) {
+    await db.query(
+        `INSERT INTO autoreject (
+            user_id, type
+        ) VALUES ($1, $2) ON CONFLICT (
+            user_id, type
+        ) DO UPDATE SET type = autoreject.type`,
+        [user_id, type]
+    );
+}
+
+export async function remove_autoreject(user_id, type) {
+    await db.query(
+        `DELETE FROM autochallenge WHERE user_id = $1 AND type = $2`,
+        [user_id, type]
+    );
+}
+
+export async function is_autorejecting(user_id, type) {
+    return (
+        await db.query(
+            `SELECT COUNT(*) FROM autochallenge WHERE user_id = $1 AND type = $2`,
+            [user_id, type]
+        )
+    ).rows[0].count;
+}
