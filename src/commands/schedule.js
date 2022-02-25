@@ -152,10 +152,9 @@ export async function execute(interaction) {
     } else if (sub == "list") {
         console.log(scheduled);
         const blocks = [];
-        for (const [group, channel_id] of scheduled) {
-            console.log(channel_id, group);
+        for (const [channel_id, group] of scheduled) {
             const block = [];
-            for (const [item, type] of group) {
+            for (const [type, item] of group) {
                 console.log(type, item);
                 block.push(
                     `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
@@ -247,8 +246,8 @@ function schedule(type, channel, min, max, activity_scaling, initial) {
 
 setInterval(() => {
     const now = new Date();
-    for (const [group, channel_id] of scheduled) {
-        for (const [item, type] of group) {
+    for (const [channel_id, group] of scheduled) {
+        for (const [type, item] of group) {
             if (now >= item.date) {
                 post_event(channel_id, type);
                 types[type](item.channel);
