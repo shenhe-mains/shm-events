@@ -153,8 +153,10 @@ export async function execute(interaction) {
         console.log(scheduled);
         const blocks = [];
         for (const [group, channel_id] of scheduled) {
+            console.log(channel_id, group);
             const block = [];
             for (const [item, type] of group) {
+                console.log(type, item);
                 block.push(
                     `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
                 );
