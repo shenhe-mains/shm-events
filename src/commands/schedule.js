@@ -122,21 +122,19 @@ export async function execute(interaction) {
     const channel = interaction.options.getChannel("channel");
     if (sub != "list" && !types[type]) return "That event type does not exist.";
     if (sub == "create") {
+        if (scheduled.has(channel.id) && scheduled.get(channel.id).has(type)) {
+            return `The event \`${type}\` is already scheduled in this channel.`;
+        }
+        const min = interaction.options.getInteger("min");
+        const max = interaction.options.getInteger("max");
+        const activity_scaling =
+            interaction.options.getInteger("activity_scaling") || 0;
+        await add_event(channel.id, type, min, max, activity_scaling);
         await post_event(channel.id, type);
         if (!interaction.options.getBoolean("skip")) {
             types[type](channel);
         }
-        if (
-            schedule(
-                type,
-                channel,
-                interaction.options.getInteger("min"),
-                interaction.options.getInteger("max"),
-                interaction.options.getInteger("activity_scaling") || 0
-            )
-        ) {
-            return `The event \`${type}\` is already scheduled in this channel.`;
-        }
+        schedule(type, channel, min, max, activity_scaling);
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
@@ -235,9 +233,6 @@ export const scheduled = new Map();
 function schedule(type, channel, min, max, activity_scaling, initial) {
     if (!scheduled.has(channel.id)) {
         scheduled.set(channel.id, new Map());
-    }
-    if (scheduled.get(channel.id).has(type)) {
-        return true;
     }
     const now = new Date();
     now.setSeconds(
