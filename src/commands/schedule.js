@@ -105,6 +105,11 @@ export const command = {
                 },
             ],
         },
+        {
+            name: "list",
+            description: "List ongoing events",
+            type: "SUB_COMMAND",
+        },
     ],
 };
 
@@ -121,13 +126,17 @@ export async function execute(interaction) {
         if (!interaction.options.getBoolean("skip")) {
             types[type](channel);
         }
-        schedule(
-            type,
-            channel,
-            interaction.options.getInteger("min"),
-            interaction.options.getInteger("max"),
-            interaction.options.getInteger("activity_scaling") || 0
-        );
+        if (
+            schedule(
+                type,
+                channel,
+                interaction.options.getInteger("min"),
+                interaction.options.getInteger("max"),
+                interaction.options.getInteger("activity_scaling") || 0
+            )
+        ) {
+            return `The event \`${type}\` is already scheduled in this channel.`;
+        }
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
@@ -142,6 +151,18 @@ export async function execute(interaction) {
         const delay = interaction.options.getInteger("delay") || 0;
         setTimeout(() => types[type](channel), delay * 1000);
         return "Posted!";
+    } else if (sub == "list") {
+        const blocks = [];
+        for (const [group, channel_id] of scheduled) {
+            const block = [];
+            for (const [item, type] of group) {
+                block.push(
+                    `\`${type}\`: cooldown (s) [${item.min}, ${item.max}], activity scaling ${item.activity_scaling}`
+                );
+            }
+            blocks.push(`<#${channel_id}>\n${block.join("\n")}`);
+        }
+        return blocks.join("\n\n");
     }
 }
 
@@ -213,6 +234,9 @@ export const scheduled = new Map();
 function schedule(type, channel, min, max, activity_scaling, initial) {
     if (!scheduled.has(channel.id)) {
         scheduled.set(channel.id, new Map());
+    }
+    if (schedule.get(channel.id).has(type)) {
+        return true;
     }
     const now = new Date();
     now.setSeconds(
