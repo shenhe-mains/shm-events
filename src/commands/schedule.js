@@ -126,7 +126,7 @@ export async function execute(interaction) {
             channel,
             interaction.options.getInteger("min"),
             interaction.options.getInteger("max"),
-            interaction.getOptions("activity_scaling") || 0
+            interaction.options.getInteger("activity_scaling") || 0
         );
         return "Created!";
     } else if (sub == "delete") {
