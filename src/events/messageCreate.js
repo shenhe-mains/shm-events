@@ -1,3 +1,4 @@
+import { scheduled } from "../commands/schedule.js";
 import { config } from "../config.js";
 import {
     increase_user_xp,
@@ -29,6 +30,18 @@ export async function handle(message) {
                 ) / 12000;
             last_message.set(message.author.id, now);
             await add_xp(message.member, xp);
+        }
+    }
+    // random events
+    if (scheduled.has(message.channel.id)) {
+        console.log("E");
+        for (const item of scheduled.get(message.channel.id)) {
+            if (item.activity_scaling) {
+                item.date.setSeconds(
+                    item.date.getSeconds() - item.activity_scaling
+                );
+                console.log(item);
+            }
         }
     }
 }

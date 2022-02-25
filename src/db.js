@@ -372,14 +372,20 @@ export async function give_salary(user_id) {
     );
 }
 
-export async function add_event(channel_id, type, min_period, max_period) {
+export async function add_event(
+    channel_id,
+    type,
+    min_period,
+    max_period,
+    activity_scaling
+) {
     await db.query(
         `INSERT INTO random_events (
-            channel_id, type, min_period, max_period
-        ) VALUES ($1, $2, $3, $4) ON CONFLICT (
+            channel_id, type, min_period, max_period, activity_scaling
+        ) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (
             channel_id, type
-        ) DO UPDATE SET min_period = $3, max_period = $4`,
-        [channel_id, type, min_period, max_period]
+        ) DO UPDATE SET min_period = $3, max_period = $4, activity_scaling = $5`,
+        [channel_id, type, min_period, max_period, activity_scaling]
     );
 }
 
@@ -419,10 +425,8 @@ export async function create_question(question, image) {
     ).rows[0].id;
 }
 
-export async function delete_question(question) {
-    await db.query(`DELETE FROM trivia_questions WHERE question = $1`, [
-        question,
-    ]);
+export async function delete_question(id) {
+    await db.query(`DELETE FROM trivia_questions WHERE id = $1`, [id]);
 }
 
 export async function get_question(question) {

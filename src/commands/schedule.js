@@ -72,6 +72,12 @@ export const command = {
                     required: true,
                 },
                 {
+                    name: "activity_scaling",
+                    description:
+                        "the number of seconds to take off the delay each time a message is sent in that channel",
+                    type: "INTEGER",
+                },
+                {
                     name: "skip",
                     description: "whether or not to skip posting right now",
                     type: "BOOLEAN",
@@ -111,17 +117,17 @@ export async function execute(interaction) {
     const channel = interaction.options.getChannel("channel");
     if (!types[type]) return "That event type does not exist.";
     if (sub == "create") {
-        await add_event(
-            channel.id,
-            type,
-            interaction.options.getInteger("min"),
-            interaction.options.getInteger("max")
-        );
         await post_event(channel.id, type);
         if (!interaction.options.getBoolean("skip")) {
             types[type](channel);
         }
-        await schedule(type, channel);
+        schedule(
+            type,
+            channel,
+            interaction.options.getInteger("min"),
+            interaction.options.getInteger("max"),
+            interaction.getOptions("activity_scaling") || 0
+        );
         return "Created!";
     } else if (sub == "delete") {
         await delete_event(channel.id, type);
@@ -152,7 +158,7 @@ const types = {
             embeds: [
                 {
                     title: "Trivia Question!",
-                    description: `${question}\n\nYou will receive ${xp} XP for your team + ${cash} ${emojis.coin} (10 minutes to answer).`,
+                    description: `${question}\n\nYou will receive ${xp} XP for your team + ${cash} ${emojis.coin} (2 minutes to answer).`,
                     color: "ff0088",
                     image: image ? { url: image } : null,
                 },
@@ -167,7 +173,7 @@ const types = {
                     !message.member.roles.cache.has("838116854866116608") &&
                     answers.indexOf(message.content.toLowerCase()) != -1,
                 max: 1,
-                time: 600000,
+                time: 120000,
                 errors: ["time"],
             });
             const message = messages.first();
@@ -202,46 +208,47 @@ const types = {
     },
 };
 
-const scheduled = new Map();
+export const scheduled = new Map();
 
-async function schedule(type, channel) {
-    const event = await get_event(channel.id, type);
-    if (!event) return;
-    const seconds =
-        Math.random() * (event.max_period - event.min_period) +
-        event.min_period;
-    const key = channel.id + "/" + type;
-    if (scheduled.has(key)) {
-        try {
-            clearTimeout(scheduled.get(key));
-        } catch {}
+function schedule(type, channel, min, max, activity_scaling, initial) {
+    if (!scheduled.has(channel.id)) {
+        scheduled.set(channel.id, new Map());
     }
     const now = new Date();
-    const delay = seconds * 1000 - (now - event.last);
-    scheduled.set(
-        key,
-        setTimeout(() => {
-            post_event(channel.id, type);
-            types[type](channel);
-            schedule(type, channel);
-        }, delay)
+    now.setSeconds(
+        now.getSeconds() + (initial ?? Math.random() * (max - min) + min)
     );
-    now.setMilliseconds(now.getMilliseconds() + delay);
-    await (
-        await client.channels.fetch("939295929121513472")
-    ).send(
-        `Event \`${type}\` is scheduled to trigger in ${channel}: ${display_time(
-            now
-        )}`
-    );
+    scheduled
+        .get(channel.id)
+        .set(type, { min, max, activity_scaling, channel, date: now });
 }
+
+setInterval(() => {
+    const now = new Date();
+    for (const [group, channel_id] of scheduled) {
+        for (const [item, type] of group) {
+            if (now >= item.date) {
+                post_event(channel_id, type);
+                types[type](item.channel);
+                item.date.setSeconds(
+                    item.date.getSeconds() +
+                        Math.random() * (item.max - item.min) +
+                        item.min
+                );
+            }
+        }
+    }
+}, 1000);
 
 get_events().then((entries) =>
     entries.forEach(async (entry) => {
         try {
-            await schedule(
+            schedule(
                 entry.type,
-                await client.channels.fetch(entry.channel_id)
+                await client.channels.fetch(entry.channel_id),
+                entry.min,
+                entry.max,
+                entry.activity_scaling
             );
         } catch (error) {
             console.error(error);

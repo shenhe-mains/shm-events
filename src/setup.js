@@ -96,6 +96,7 @@ import { db } from "./db_client.js";
             last TIMESTAMP NOT NULL DEFAULT '1970-1-1',
             min_period INTEGER NOT NULL,
             max_period INTEGER NOT NULL,
+            activity_scaling INTEGER NOT NULL,
             PRIMARY KEY (channel_id, type)
         )`
     );

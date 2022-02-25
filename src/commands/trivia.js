@@ -108,7 +108,7 @@ export async function execute(interaction) {
             return "Created.";
         case "delete_question":
             if (!id) return "That question does not exist.";
-            await delete_question(question);
+            await delete_question(id);
             return "Deleted.";
         case "add_answer":
             if (!id) return "That question does not exist.";
