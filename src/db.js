@@ -487,9 +487,11 @@ export async function remove_autoreject(user_id, type) {
 
 export async function is_autorejecting(user_id, type) {
     return (
-        await db.query(
-            `SELECT COUNT(*) FROM autoreject WHERE user_id = $1 AND type = $2`,
-            [user_id, type]
-        )
-    ).rows[0].count;
+        (
+            await db.query(
+                `SELECT COUNT(*) FROM autoreject WHERE user_id = $1 AND type = $2`,
+                [user_id, type]
+            )
+        ).rows[0].count > 0
+    );
 }
