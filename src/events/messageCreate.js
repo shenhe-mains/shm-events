@@ -33,7 +33,11 @@ export async function handle(message) {
         }
     }
     // random events
-    if (scheduled.has(message.channel.id)) {
+    if (
+        !message.webhookId &&
+        !message.author.bot &&
+        scheduled.has(message.channel.id)
+    ) {
         for (const [_, item] of scheduled.get(message.channel.id)) {
             if (item.activity_scaling) {
                 item.date.setSeconds(
