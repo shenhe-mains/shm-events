@@ -43,7 +43,6 @@ export async function handle(message) {
                 item.date.setSeconds(
                     item.date.getSeconds() - item.activity_scaling
                 );
-                console.log(item);
             }
         }
     }
