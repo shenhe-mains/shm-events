@@ -120,7 +120,7 @@ export async function execute(interaction) {
     const sub = interaction.options.getSubcommand();
     const type = interaction.options.getString("type");
     const channel = interaction.options.getChannel("channel");
-    if (!types[type]) return "That event type does not exist.";
+    if (sub != "list" && !types[type]) return "That event type does not exist.";
     if (sub == "create") {
         await post_event(channel.id, type);
         if (!interaction.options.getBoolean("skip")) {
@@ -162,7 +162,7 @@ export async function execute(interaction) {
             }
             blocks.push(`<#${channel_id}>\n${block.join("\n")}`);
         }
-        return blocks.join("\n\n");
+        return blocks.join("\n\n") || "(none)";
     }
 }
 
