@@ -1,12 +1,14 @@
 import { add_autoreject, remove_autoreject } from "../db.js";
 import { challenge_types } from "./challenge.js";
 
-const types = {
-    name: "type",
-    description: "the type of challenge to automatically respond to",
-    type: "STRING",
-    choices: challenge_types.map(([x]) => ({ name: x, value: x })),
-};
+const types = [
+    {
+        name: "type",
+        description: "the type of challenge to automatically respond to",
+        type: "STRING",
+        choices: challenge_types.map(([x]) => ({ name: x, value: x })),
+    },
+];
 
 export const command = {
     name: "autoreject",
