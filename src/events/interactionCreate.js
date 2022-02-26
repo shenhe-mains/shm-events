@@ -53,7 +53,7 @@ export async function handle(interaction) {
             `Success! You now have ${tickets + 1} ticket${
                 tickets == 0 ? "" : "s"
             }.` +
-            (tickets < giveaway.max_tickets
+            (tickets + 1 < giveaway.max_tickets
                 ? ` You can enter again <t:${
                       Math.floor(new Date().getTime() / 1000) +
                       giveaway.cooldown * 60
