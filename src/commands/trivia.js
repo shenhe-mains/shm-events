@@ -125,6 +125,9 @@ export async function execute(interaction) {
 }
 
 export async function autocomplete(interaction) {
+    if (config.owners.indexOf(interaction.user.id) == -1) {
+        return [];
+    }
     await ac_substring(
         interaction,
         (await list_questions()).map((entry) => entry.question)
