@@ -18,6 +18,7 @@ export async function execute(interaction) {
     const last = await last_salary(interaction.user.id);
     const now = new Date();
     if (
+        last &&
         now.getDate() == last.getDate() &&
         now.getMonth() == last.getMonth() &&
         now.getYear() == last.getYear()
