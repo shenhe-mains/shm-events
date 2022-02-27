@@ -238,7 +238,7 @@ function schedule(type, channel, min, max, activity_scaling, initial) {
     }
     const now = new Date();
     now.setSeconds(
-        now.getSeconds() + (initial ?? Math.random() * (max - min) + min)
+        now.getSeconds() + Math.random() * (max - min) + min - (initial ?? 0)
     );
     scheduled
         .get(channel.id)
