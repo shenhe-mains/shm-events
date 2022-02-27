@@ -189,6 +189,29 @@ export async function execute(interaction) {
         const draw = () =>
             cards.splice(Math.floor(Math.random() * cards.length), 1)[0];
         const hands = players.map((player) => [player, [draw(), draw()]]);
+        if (hands.some(([player, hand]) => hand_total(hand) == 21)) {
+            const winners = hands.filter(
+                ([player, hand]) => hand_total(hand) == 21
+            );
+            const reward = Math.floor(pot / winners.length);
+            await interaction.channel.send({
+                embeds: [
+                    {
+                        title: "Natural 21!",
+                        description: `One or more players were dealt a 21 immediately. ${reward} ${
+                            emojis.coin
+                        } has been rewarded to ${english_join(
+                            winners.map(([player, hand]) => player.toString())
+                        )}.`,
+                        color: "ORANGE",
+                    },
+                ],
+            });
+            for (const winner of winners) {
+                await add_money(winner.id, reward);
+            }
+            return;
+        }
         shuffle(hands);
         var skip;
         while (hands.length > 1) {
@@ -369,7 +392,8 @@ export async function execute(interaction) {
         for (const winner of winners) {
             await add_money(winner.id, reward);
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         await interaction.channel.send({
             embeds: [
                 {
