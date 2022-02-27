@@ -389,10 +389,13 @@ export async function execute(interaction) {
 function hand_total(hand) {
     var total = 0;
     for (const [name, value] of hand) {
+        if (value != 0) {
+            total += value;
+        }
+    }
+    for (const [name, value] of hand) {
         if (value == 0) {
             total += total <= 10 ? 11 : 1;
-        } else {
-            total += value;
         }
     }
     return total;
