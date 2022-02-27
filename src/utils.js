@@ -1,5 +1,5 @@
 export const emojis = {
-    coin: "<:exorcium:945486340861083648>",
+    coin: "<:exorcium:947302445594316800>",
 };
 
 export class Response extends Error {
@@ -99,4 +99,12 @@ export async function confirm(interaction, embed, confirm, cancel, timeout) {
         embeds: [],
         components: [],
     });
+}
+
+export function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }

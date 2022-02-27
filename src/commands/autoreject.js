@@ -7,7 +7,10 @@ const types = [
         description: "the type of challenge to automatically respond to",
         type: "STRING",
         required: true,
-        choices: challenge_types.map(([x]) => ({ name: x, value: x })),
+        choices: challenge_types
+            .map(([x]) => x)
+            .concat(["blackjack"])
+            .map((x) => ({ name: x, value: x })),
     },
 ];
 
