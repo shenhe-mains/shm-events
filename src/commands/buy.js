@@ -67,10 +67,10 @@ export async function execute(interaction) {
         last.setSeconds(last.getSeconds() + item.cooldown);
         return `You can buy again ${display_time(last)}.`;
     }
-    await add_money(interaction.user.id, -item.cost * amount);
     if (item.validate && !(await item.validate(interaction, amount))) {
         return;
     }
+    await add_money(interaction.user.id, -item.cost * amount);
     await item.buy(interaction, amount);
     await buy(item.name, interaction.user.id, amount);
 }
