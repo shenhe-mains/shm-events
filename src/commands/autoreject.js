@@ -9,7 +9,7 @@ const types = [
         required: true,
         choices: challenge_types
             .map(([x]) => x)
-            .concat(["blackjack"])
+            .concat([])
             .map((x) => ({ name: x, value: x })),
     },
 ];
