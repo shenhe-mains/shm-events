@@ -188,26 +188,31 @@ export async function execute(interaction) {
                 }
                 if (action == "blackjack.double") {
                     if (bet == 0) {
-                        await interaction.reply({
+                        await response.reply({
                             content:
                                 "You are currently playing for nothing so this action doesn't make sense...",
                             ephemeral: true,
                         });
+                        response = undefined;
                     } else if ((await get_money(interaction.user.id)) < bet) {
-                        await interaction.reply({
+                        await response.reply({
                             content: `You do not have ${bet} ${emojis.coin}`,
                             ephemeral: true,
                         });
+                        response = undefined;
                     } else {
                         await add_money(interaction.user.id, -bet);
                         bet *= 2;
                     }
                 }
+                const reply = response
+                    ? response.update.bind(response)
+                    : message.edit.bind(message);
                 if (action == "blackjack.hit" || action == "blackjack.double") {
                     player.push(draw());
                     const total = hand_total(player);
                     if (total > 21) {
-                        await response.update({
+                        await reply({
                             embeds: [
                                 {
                                     title: "Bust!",
@@ -221,11 +226,11 @@ export async function execute(interaction) {
                         });
                         return;
                     } else if (total < 21) {
-                        await response.update({
+                        await reply({
                             embeds: [embed()],
                         });
                     } else {
-                        await response.update({
+                        await reply({
                             embeds: [
                                 {
                                     title: "21!",
@@ -241,9 +246,7 @@ export async function execute(interaction) {
                     }
                 } else if (action == "blackjack.forfeit") {
                     await add_money(interaction.user.id, Math.floor(bet / 2));
-                    await (response
-                        ? response.update.bind(response)
-                        : message.edit.bind(message))({
+                    await reply({
                         embeds: [
                             {
                                 title: "Forfeited!",
@@ -256,7 +259,7 @@ export async function execute(interaction) {
                         components: [],
                     });
                 } else if (action == "blackjack.stand") {
-                    await response.update({
+                    await reply({
                         embeds: [
                             {
                                 title: "Standing!",
