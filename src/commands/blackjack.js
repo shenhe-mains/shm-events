@@ -258,6 +258,7 @@ export async function execute(interaction) {
                         ],
                         components: [],
                     });
+                    return;
                 } else if (action == "blackjack.stand") {
                     await reply({
                         embeds: [
