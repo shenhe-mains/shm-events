@@ -119,6 +119,29 @@ export async function execute(interaction) {
                     },
                 ],
             });
+        } else if (hand_total(player) > 21) {
+            if (hand_total(dealer) > 21) {
+                await add_money(interaction.user.id, bet);
+                await interaction.channel.send({
+                    embeds: [
+                        {
+                            title: "Draw!",
+                            description: `The dealer's starting hand (${dealer[0].name} + ${dealer[1].name}) and yours both went bust, so you have drawn and received your bet back.`,
+                            color: "GOLD",
+                        },
+                    ],
+                });
+            } else {
+                await interaction.channel.send({
+                    embeds: [
+                        {
+                            title: "Bust!",
+                            description: `Your hand went bust and the dealer's hand (${dealer[0].name} + ${dealer[1].name}) didn't, so you lost!`,
+                            color: "RED",
+                        },
+                    ],
+                });
+            }
         } else {
             const embed = () => ({
                 title: "Pick an action!",
@@ -245,39 +268,39 @@ export async function execute(interaction) {
                     break;
                 }
             }
+            while (hand_total(dealer) < 17) {
+                dealer.push(draw());
+            }
+            const dt = hand_total(dealer);
+            const pt = hand_total(player);
+            const win = dt > 21 || pt > dt;
+            if (pt == dt) {
+                await add_money(interaction.user.id, bet);
+            } else if (win) {
+                await add_money(interaction.user.id, Math.floor(bet * 1.5));
+            }
+            await interaction.channel.send({
+                embeds: [
+                    {
+                        title: pt == dt ? "Draw!" : win ? "Win!" : "Loss!",
+                        description: `\`Dealer\`: ${dealer
+                            .map((card) => card.name)
+                            .join(" + ")} (${dt})\n\`Player\`: ${player
+                            .map((card) => card.name)
+                            .join(" + ")} (${pt})\n\n${
+                            pt == dt
+                                ? `You drew and will receive all ${bet} ${emojis.coin} back.`
+                                : win
+                                ? `You won and will receive ${Math.floor(
+                                      bet * 1.5
+                                  )} ${emojis.coin}`
+                                : `You lost!`
+                        }`,
+                        color: pt == dt ? "GOLD" : win ? "GREEN" : "RED",
+                    },
+                ],
+            });
         }
-        while (hand_total(dealer) < 17) {
-            dealer.push(draw());
-        }
-        const dt = hand_total(dealer);
-        const pt = hand_total(player);
-        const win = dt > 21 || pt > dt;
-        if (pt == dt) {
-            await add_money(interaction.user.id, bet);
-        } else if (win) {
-            await add_money(interaction.user.id, Math.floor(bet * 1.5));
-        }
-        await interaction.channel.send({
-            embeds: [
-                {
-                    title: pt == dt ? "Draw!" : win ? "Win!" : "Loss!",
-                    description: `\`Dealer\`: ${dealer
-                        .map((card) => card.name)
-                        .join(" + ")} (${dt})\n\`Player\`: ${player
-                        .map((card) => card.name)
-                        .join(" + ")} (${pt})\n\n${
-                        pt == dt
-                            ? `You drew and will receive all ${bet} ${emojis.coin} back.`
-                            : win
-                            ? `You won and will receive ${Math.floor(
-                                  bet * 1.5
-                              )} ${emojis.coin}`
-                            : `You lost!`
-                    }`,
-                    color: pt == dt ? "GOLD" : win ? "GREEN" : "RED",
-                },
-            ],
-        });
     } catch (error) {
         await add_money(interaction.user.id, bet);
         await interaction.channel.send({
