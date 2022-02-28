@@ -193,13 +193,13 @@ export async function execute(interaction) {
                                 "You are currently playing for nothing so this action doesn't make sense...",
                             ephemeral: true,
                         });
-                        response = undefined;
+                        continue;
                     } else if ((await get_money(interaction.user.id)) < bet) {
                         await response.reply({
                             content: `You do not have ${bet} ${emojis.coin}`,
                             ephemeral: true,
                         });
-                        response = undefined;
+                        continue;
                     } else {
                         await add_money(interaction.user.id, -bet);
                         bet *= 2;
