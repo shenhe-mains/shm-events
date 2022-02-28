@@ -10,6 +10,7 @@ export const command = {
             name: "bet",
             description: "the amount to bet",
             type: "INTEGER",
+            minValue: 0,
             required: true,
         },
     ],
@@ -302,6 +303,7 @@ export async function execute(interaction) {
             });
         }
     } catch (error) {
+        console.error(error);
         await add_money(interaction.user.id, bet);
         await interaction.channel.send({
             embeds: [
