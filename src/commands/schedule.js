@@ -186,6 +186,7 @@ const types = {
                 },
             ],
         });
+        await channel.setRateLimitPerUser(10, "trivia question anti-spam");
         try {
             const messages = await channel.awaitMessages({
                 filter: (message) =>
@@ -224,6 +225,7 @@ const types = {
                 ],
             });
         }
+        await channel.setRateLimitPerUser(0, "trivia question over");
     },
     test: async (channel) => {
         await channel.send("test");
