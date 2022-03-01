@@ -5,19 +5,36 @@ export const command = {
     options: [
         {
             name: "item",
-            description: "what to get help on",
+            description: "what to get help on (leave blank for global help)",
             type: "STRING",
-            required: true,
             choices: ["blackjack"].map((x) => ({ name: x, value: x })),
         },
     ],
 };
 
 export async function execute(interaction) {
+    const item = interaction.options.getString("item");
     await interaction.reply({
-        embeds: [helptext[interaction.options.getString("item")]],
+        embeds: [item ? helptext[item] : all],
     });
 }
+
+const all = {
+    title: "Bot Help",
+    description:
+        "This is a list of public commands for the auxilliary features like event and bot functionalities. The core bot is probably `#help`.\n\n" +
+        "`/account` - view how much money you or another user has\n" +
+        "`/salary` - get your daily salary (resets daily at midnight UTC)\n" +
+        "`/pay` - pay another member some money\n" +
+        "`/economy` - view the richest users on the server (accepts a page argument)\n" +
+        "`/leaderboard` - view each team's XP for the current event if applicable\n" +
+        "`/blackjack` - play a game of blackjack against the help (`/help blackjack` for information)\n" +
+        "`/challenge rps` - play a game of rock-paper-scissors against another user (you can bet money on it or play for free)\n" +
+        "`/challenge fight` - do a random fight against another user (50/50 for either person to win; you can bet or play for free)\n" +
+        "`/autoreject` - block challenges so other players cannot challenge you and you will not be pinged for it\n" +
+        "`/buy` - buy something - currently, you can buy war efforts (XP for the event if applicable) or lottery tickets ($100 per ticket, 20% chance to double, 5% chance to quintuple, maximum 5 per purchase, one purchase per hour)",
+    color: "ORANGE",
+};
 
 const helptext = {
     blackjack: {
