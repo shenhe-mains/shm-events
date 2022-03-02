@@ -4,11 +4,15 @@ import {
     add_money,
     delete_event,
     delete_question,
+    get_biggest_earner,
+    get_biggest_loser,
+    get_economy_change,
     get_event,
     get_events,
     list_answers,
     list_questions,
     post_event,
+    reset_economy_changes,
 } from "../db.js";
 import { display_time, emojis } from "../utils.js";
 import { add_xp } from "../events/messageCreate.js";
@@ -23,6 +27,10 @@ export const type = {
         {
             name: "trivia",
             value: "trivia",
+        },
+        {
+            name: "daily_update",
+            value: "daily_update",
         },
         {
             name: "test",
@@ -226,6 +234,25 @@ const types = {
             });
         }
         await channel.setRateLimitPerUser(0, "trivia question over");
+    },
+    daily_update: async (channel) => {
+        const change = await get_economy_change();
+        const winner = await get_biggest_earner();
+        const loser = await get_biggest_loser();
+        await reset_economy_changes();
+        await channel.send({
+            embeds: [
+                {
+                    title: "Daily Economy Report",
+                    description:
+                        `Since the last report, the net change in everyone's account was ${change} ${emojis.coin}\n\n` +
+                        (winner
+                            ? `The greatest changes were <@${winner.user_id}> with ${winner.money} ${emojis.coin} and <@${loser.user_id}> with ${winner.money} ${emojis.coin}`
+                            : "Nobody had any monetary changes."),
+                    color: "ff00ff",
+                },
+            ],
+        });
     },
     test: async (channel) => {
         await channel.send("test");

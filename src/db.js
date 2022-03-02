@@ -100,26 +100,17 @@ export async function list_xp_blocked_channels() {
     ));
 }
 
-export async function set_money(user_id, money) {
-    await db.query(
-        `INSERT INTO economy (
-            user_id, money
-        ) VALUES ($1, $2) ON CONFLICT (
-            user_id
-        ) DO UPDATE SET money = $2`,
-        [user_id, money]
-    );
-}
-
 export async function add_money(user_id, money) {
-    await db.query(
-        `INSERT INTO economy (
+    for (const table of ["economy", "economy_changes"]) {
+        await db.query(
+            `INSERT INTO ${table} (
             user_id, money
         ) VALUES ($1, $2) ON CONFLICT (
             user_id
-        ) DO UPDATE SET money = economy.money + $2`,
-        [user_id, money]
-    );
+        ) DO UPDATE SET money = ${table}.money + $2`,
+            [user_id, money]
+        );
+    }
 }
 
 export async function get_money(user_id) {
@@ -141,8 +132,34 @@ export async function economy(page) {
     ).rows;
 }
 
+export async function get_economy_change() {
+    return (await db.query(`SELECT SUM(money) FROM economy_changes`)).rows[0]
+        .sum;
+}
+
+export async function get_biggest_earner() {
+    return (
+        await db.query(
+            `SELECT * FROM economy_changes ORDER BY money DESC LIMIT 1`
+        )
+    ).rows[0];
+}
+
+export async function get_biggest_loser() {
+    return (
+        await db.query(
+            `SELECT * FROM economy_changes ORDER BY money ASC LIMIT 1`
+        )
+    ).rows[0];
+}
+
+export async function reset_economy_changes() {
+    await db.query(`DELETE FROM economy_changes`);
+}
+
 export async function reset_economy() {
     await db.query(`DELETE FROM economy`);
+    await db.query(`DELETE FROM economy_changes`);
     await db.query(`DELETE FROM salaries`);
 }
 

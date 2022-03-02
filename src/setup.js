@@ -31,6 +31,13 @@ import { db } from "./db_client.js";
     );
 
     await db.query(
+        `CREATE TABLE IF NOT EXISTS economy_changes (
+            user_id VARCHAR(32) PRIMARY KEY NOT NULL,
+            money INTEGER DEFAULT 0,
+        )`
+    );
+
+    await db.query(
         `CREATE TABLE IF NOT EXISTS giveaways (
             id SERIAL PRIMARY KEY NOT NULL,
             title VARCHAR(128) NOT NULL,
