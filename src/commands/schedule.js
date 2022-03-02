@@ -29,10 +29,6 @@ export const type = {
             value: "trivia",
         },
         {
-            name: "daily_update",
-            value: "daily_update",
-        },
-        {
             name: "test",
             value: "test",
         },
@@ -247,7 +243,7 @@ const types = {
                     description:
                         `Since the last report, the net change in everyone's account was ${change} ${emojis.coin}\n\n` +
                         (winner
-                            ? `The greatest changes were <@${winner.user_id}> with ${winner.money} ${emojis.coin} and <@${loser.user_id}> with ${winner.money} ${emojis.coin}`
+                            ? `The greatest changes were <@${winner.user_id}> with ${winner.money} ${emojis.coin} and <@${loser.user_id}> with ${loser.money} ${emojis.coin}`
                             : "Nobody had any monetary changes."),
                     color: "ff00ff",
                 },
@@ -274,6 +270,8 @@ function schedule(type, channel, min, max, activity_scaling, initial) {
         .set(type, { min, max, activity_scaling, channel, date: now });
 }
 
+var last = new Date();
+
 setInterval(() => {
     const now = new Date();
     for (const [channel_id, group] of scheduled) {
@@ -288,6 +286,10 @@ setInterval(() => {
                 );
             }
         }
+    }
+    if (now.getDate() != last.getDate()) {
+        client.channels.fetch("946843963132870686").then(types.daily_update);
+        last = now;
     }
 }, 1000);
 

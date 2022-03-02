@@ -33,7 +33,7 @@ import { db } from "./db_client.js";
     await db.query(
         `CREATE TABLE IF NOT EXISTS economy_changes (
             user_id VARCHAR(32) PRIMARY KEY NOT NULL,
-            money INTEGER DEFAULT 0,
+            money INTEGER DEFAULT 0
         )`
     );
 
