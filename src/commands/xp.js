@@ -8,6 +8,7 @@ import {
     top_10_user_xp,
     unblock_channel_xp,
 } from "../db.js";
+import { lock_xp, unlock_xp } from "../events/messageCreate.js";
 
 export const command = {
     name: "xp",
@@ -86,6 +87,16 @@ export const command = {
             description: "Show the top 10 users' individual XP.",
             type: "SUB_COMMAND",
         },
+        {
+            name: "lock",
+            description: "Lock XP entirely",
+            type: "SUB_COMMAND",
+        },
+        {
+            name: "unlock",
+            description: "Unlock XP",
+            type: "SUB_COMMAND",
+        },
     ],
 };
 
@@ -136,5 +147,11 @@ export async function execute(interaction) {
                 ephemeral: true,
             });
             return;
+        case "lock":
+            lock_xp();
+            return "Locked until next restart or manual unlock.";
+        case "unlock":
+            unlock_xp();
+            return "Unlocked XP.";
     }
 }

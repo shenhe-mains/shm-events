@@ -9,9 +9,20 @@ import {
 
 const last_message = new Map();
 
+var locked = false;
+
+export function lock_xp() {
+    locked = true;
+}
+
+export function unlock_xp() {
+    locked = false;
+}
+
 export async function handle(message) {
     // XP
     if (
+        !locked &&
         message.guild &&
         message.guild.id == config.guild_id &&
         !message.webhookId &&
