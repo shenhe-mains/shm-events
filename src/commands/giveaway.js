@@ -304,7 +304,8 @@ async function draw(guild, giveaway) {
             }
             if (weight === 0) continue;
             if (weight === undefined) weight = 1;
-            entrants.push({ member, weight: weight * tickets });
+            weight = weight * tickets;
+            entrants.push({ member, weight });
             total += weight;
         } catch {}
     }
